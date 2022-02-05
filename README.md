@@ -13,6 +13,7 @@ We are generally going to follow these principles:
  - All ideas are worthy of conversation
  - All contributions are equal, no matter how big or how small
  - We here to learn and grow, that can lead to disagreements but we vow to work through them to build cool shit.
+ - Be patient with eachother, no quesstion is too small or trivial.
  - This list is ever growing.
 
 ### Proposed Bots
@@ -43,8 +44,10 @@ There are still things to figure out:
  3. Other shit that I'm not aware of at this point.
 
 ### Resources
-[Discord JS](https://discord.js.org)
-[An Awesome Guide To Building Bots in JS](https://discordjs.guide/)
+- [Discord JS](https://discord.js.org)
+- [An Awesome Guide To Building Bots in JS](https://discordjs.guide/)
+- [Git Commit Naming Conventions](https://dev.to/i5han3/git-commit-message-convention-that-you-can-follow-1709)
+- 
   
  Lastly, this will be a huge learning journey for all of us. There won't be pressures or expectations for anyone, just having fun and building something we can show off and talk about with pride. 
 
