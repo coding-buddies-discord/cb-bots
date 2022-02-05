@@ -21,12 +21,16 @@ Here is a list of the bots that we think would add value to the server right now
   2. Welcome Bot - a bot that welcomes new members and ask them simple questions to help get them acclimated in the server
   3. Points Bot - a bot that allows users to give others points for helping them with their coding problems and tracks this points.
 
+I think we start with the Streak Bot, as it brings the most immediate value and will likely be the most challenging.
+
 ### Workflow
 We will be collaborating on Github to get this done. Our workflow will be simple:
   1. Pull this repo to your machine
   2. Create a branches everytime you're adding a feature or fixing something. These branches should follow this convention: [name]/[what-the-branch-is-doing] e.g. `earn/initializes-bot`
   3. Commit your branch to the repo and PR it into `main`.
   ** To start PR's will be reviewed by me, but this is ONLY as we start off. The plan is to get a core-team that reviews and approves PRs.
+  
+  I **THINK** we will share a bot key between everyone in the project, but not sure about this yet. 
   
 ### Stack
 The only parts of the stack that are locked in are:
@@ -37,6 +41,10 @@ There are still things to figure out:
  1. Database
  2. Hosting
  3. Other shit that I'm not aware of at this point.
+
+### Resources
+[Discord JS](https://discord.js.org)
+[An Awesome Guide To Building Bots in JS](https://discordjs.guide/)
   
  Lastly, this will be a huge learning journey for all of us. There won't be pressures or expectations for anyone, just having fun and building something we can show off and talk about with pride. 
 
