@@ -28,4 +28,15 @@ We will be collaborating on Github to get this done. Our workflow will be simple
   3. Commit your branch to the repo and PR it into `main`.
   ** To start PR's will be reviewed by me, but this is ONLY as we start off. The plan is to get a core-team that reviews and approves PRs.
   
+### Stack
+The only parts of the stack that are locked in are:
+ 1. Node.js
+ 2. Discord.js
+
+There are still things to figure out:
+ 1. Database
+ 2. Hosting
+ 3. Other shit that I'm not aware of at this point.
+  
  Lastly, this will be a huge learning journey for all of us. There won't be pressures or expectations for anyone, just having fun and building something we can show off and talk about with pride. 
+
