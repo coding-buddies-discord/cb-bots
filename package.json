@@ -1,0 +1,27 @@
+{
+  "name": "streak-bot",
+  "version": "1.0.0",
+  "description": "A bot to help encourage Coding Buddies",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waream2/cb-streak-bot.git"
+  },
+  "author": "Earn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/waream2/cb-streak-bot/issues"
+  },
+  "homepage": "https://github.com/waream2/cb-streak-bot#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.8.0"
+  }
+}
