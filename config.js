@@ -1,5 +1,0 @@
-export default {
-	token: "OTM5NjAyMTMzMDA1Nzc0ODU4.Yf7OrQ.Ulc7CaEC37O8EsFf03S63jiMsLc",
-	guildId: "939629912623575090",
-	clientId: "939602133005774858",
-};
