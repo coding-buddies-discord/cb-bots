@@ -7,7 +7,8 @@ const { clientId, guildId, token } = config;
 
 
 const commands = [
-	new SlashCommandBuilder().setName("what").setDescription("Who"),
+	new SlashCommandBuilder().setName("when").setDescription("Who"),
+	new SlashCommandBuilder().setName("new").setDescription("testing-db"),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: "9" }).setToken(token);
