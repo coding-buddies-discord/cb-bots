@@ -1,26 +1,21 @@
-/* eslint-disable quotes */
 // Require the necessary discord.js classes
-import { Client, Intents } from 'discord.js';
-import config from '../config.js';
+import { Client, Intents } from "discord.js";
+import config from "../config.js";
+// import db from '../db.js';
+import * as eventsObj from "./events/index.js";
 
 const { token } = config;
-
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
-// When the client is ready, run this code (only once)
-client.once('ready', () => {
-	console.log('Ready!');
-});
+const events = Object.values(eventsObj);
+events.forEach((event) => {
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	}
+	else {
+		client.on(event.name, (...args) => event.execute(...args));
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
-	const { commandName } = interaction;
-
-	if (commandName === 'what') {
-		// console.log('its getting there');
-		await interaction.reply('Who');
 	}
 });
 
