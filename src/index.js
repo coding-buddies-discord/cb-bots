@@ -10,13 +10,9 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 
 const events = Object.values(eventsObj);
 events.forEach((event) => {
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	}
-	else {
+	event.once ?
+		client.once(event.name, (...args) => event.execute(...args)) :
 		client.on(event.name, (...args) => event.execute(...args));
-
-	}
 });
 
 // Login to Discord with your client's token

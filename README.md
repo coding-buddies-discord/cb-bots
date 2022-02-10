@@ -13,7 +13,7 @@ We are generally going to follow these principles:
  - All ideas are worthy of conversation
  - All contributions are equal, no matter how big or how small
  - We here to learn and grow, that can lead to disagreements but we vow to work through them to build cool shit.
- - Be patient with eachother, no quesstion is too small or trivial.
+ - Be patient with eachother, no question is too small or trivial.
  - This list is ever growing.
 
 ### Proposed Bots
