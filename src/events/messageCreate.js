@@ -11,15 +11,15 @@ export default {
 		const { prefix } = config;
 		const { content } = interaction;
 		// Dividing the message
-		const args = content.indexOf(prefix) === 0 ?
-			content.slice(prefix.length).trim().split(/ +/g) : undefined;
+		const args = content.indexOf(prefix) === 0 &&
+			content.slice(prefix.length).trim().split(/ +/g);
 		// If there's no command just return
 		if (!args) return;
 		const cmd = args[0];
 
 		if (cmd === "ping") {
 			// eslint-disable-next-line prefer-const
-			let ping = client.ws.ping;
+			const ping = client.ws.ping;
 			const embed = new MessageEmbed()
 				.setColor("RANDOM")
 				.setAuthor({
