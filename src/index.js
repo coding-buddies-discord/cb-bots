@@ -17,4 +17,4 @@ events.forEach((event) => {
 
 // Login to Discord with your client's token
 client.login(token);
-
+export default client;

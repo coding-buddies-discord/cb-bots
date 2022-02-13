@@ -47,7 +47,6 @@ There are still things to figure out:
 - [Discord JS](https://discord.js.org)
 - [An Awesome Guide To Building Bots in JS](https://discordjs.guide/)
 - [Git Commit Naming Conventions](https://dev.to/i5han3/git-commit-message-convention-that-you-can-follow-1709)
-- 
   
  Lastly, this will be a huge learning journey for all of us. There won't be pressures or expectations for anyone, just having fun and building something we can show off and talk about with pride. 
 
