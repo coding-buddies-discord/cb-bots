@@ -2,6 +2,7 @@ import config from "../../config.js";
 import { MessageEmbed } from "discord.js";
 import client from "../index.js";
 
+
 export default {
 	name: "messageCreate",
 	execute(interaction) {
