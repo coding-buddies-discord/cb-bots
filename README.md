@@ -20,7 +20,7 @@ We are generally going to follow these principles:
  - Don't criticize someone elses' code. If you think something could be done better, PR a change with an explanation.
  - You can only approve a PR, once you've had a PR approved.
 
-### Proposed Bots
+### Proposed Bot Features
 Here is a list of the features this bot will handle. This list is on-going and is by no means complete:
   1. Streak Bot - a bot that tracks our member's coding streaks on a daily basis to encourage people to keep coming back to coding
   2. Welcome Bot - a bot that welcomes new members and ask them simple questions to help get them acclimated in the server
@@ -38,8 +38,9 @@ We will be collaborating on Github to get this done. Our workflow will be simple
 
 ### Stack
 The only parts of the stack that are locked in are:
- 1. Node.js
- 2. Discord.js
+ 1. [Node.js](https://nodejs.org/en/docs/)
+ 2. [Discord JS](https://discord.js.org)
+ 3. [lowdb](https://github.com/typicode/lowdb)
 
 There are still things to figure out:
  1. Database
@@ -47,7 +48,6 @@ There are still things to figure out:
  3. Other shit that I'm not aware of at this point.
 
 ### Resources
-- [Discord JS](https://discord.js.org)
 - [An Awesome Guide To Building Bots in JS](https://discordjs.guide/)
 - [Git Commit Naming Conventions](https://dev.to/i5han3/git-commit-message-convention-that-you-can-follow-1709)
 
