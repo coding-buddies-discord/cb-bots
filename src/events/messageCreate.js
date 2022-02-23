@@ -13,15 +13,13 @@ export default {
 		const { prefix, suffix } = config;
 		const { content } = interaction;
 
-		const commands = [];
-
-		// splits the message up by each space and determines if the word has a prefix or suffix
-		// it also checks if the lenght is 1 or if it has a prefex and suffix
-		content.split(" ").forEach((word) => {
-			if (word.length === 1) {return;}
-			if (word.indexOf(prefix) === 0 && word.indexOf(suffix) === word.length - 2) {return;}
-			if (word.indexOf(prefix) === 0 || word.indexOf(suffix) === word.length - 2) {commands.push(word);}
-			else {return;}
+		// goes through each word in the message to see if it should or shouldnt be a command
+		const commands = content.split(" ").filter((word) => {
+			if (word.length === 1) {return false;}
+			// this is to protect from someone sending a word with a prefix and suffix
+			if (word.indexOf(prefix) === 0 && word.indexOf(suffix) === word.length - 2) { return false; }
+			if (word.indexOf(prefix) === 0 || word.indexOf(suffix) === word.length - 2) { return true; }
+			else {return false;}
 		});
 
 		if (!commands.length) {
@@ -47,34 +45,5 @@ export default {
 			}
 		});
 
-		// LEAVING ALL OF THIS DOWN HERE INCASE WE WANT TO COME BACK TO IT
-
-		// Figuring out if the message had the prefix or the suffix
-		// 	const hadPrefix = content.indexOf(prefix) === 0 && content.substring(1);
-		// 	const hadSuffix = content.indexOf(suffix) === content.length - 2 && content.substring(0, content.length - 2);
-
-		// 	// If there's no command just return
-		// 	if (!hadPrefix && !hadSuffix) return;
-
-		// 	const cmd = hadPrefix || hadSuffix;
-
-	// 	if (hadPrefix) {
-	// 		switch (cmd) {
-	// 		case "ping":
-	// 			// here is the reply that chris wrote, just abstracted
-	// 			// out to it's own module and called here
-	// 			messageReplies.sendPing(interaction, client);
-	// 			break;
-	// 		case "pong":
-	// 			interaction.channel.send("ping");
-	// 			break;
-	// 		default:
-	// 			interaction.channel.send("I didnt recognize that message request");
-	// 		}
-	// 	}
-	// 	// if hadPrefix is false then it had to have had the suffix
-	// 	// here is where we can call the functions that will give points
-	// 	else {interaction.channel.send("This is where the magic will happen to give people points");}
-	// },
 	},
 };
