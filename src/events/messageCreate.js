@@ -2,6 +2,7 @@
 import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
+import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
 
 
 export default {
@@ -29,7 +30,7 @@ export default {
 		commands.forEach((command) => {
 			// if the prefix is at beginning of the word, then go through all the possible prefix commands
 			if (command.at(0) === prefix) {
-				switch (command) {
+				switch (command.toLowerCase()) {
 				case "!ping":
 					messageReplies.sendPing(interaction, client);
 					break;
@@ -41,6 +42,10 @@ export default {
 				}
 			}
 			if (command.at(1) === "@" && command.includes(suffix)) {
+				const mentionId = getUserIdFromMention(command);
+				if (interaction.author.id === mentionId) {
+					return interaction.channel.send("You cannot give a point to yourself");
+				}
 				interaction.channel.send("Added a point!");
 			}
 		});
