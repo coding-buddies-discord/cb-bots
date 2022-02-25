@@ -1,3 +1,7 @@
+import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
+import { isUserValid } from "../utils/isUserValid.js"
+import { addUserToPoints, giveUserAPoint, countGivenPoint, testDates } from "../../db.js";
+
 async function givePoint(command, interaction) {
 				const mentionId = getUserIdFromMention(command);
 				if(!mentionId) return //there's no mention id;

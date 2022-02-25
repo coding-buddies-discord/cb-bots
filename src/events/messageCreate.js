@@ -2,10 +2,9 @@
 import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
-import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
-import { isUserValid } from "../utils/isUserValid.js"
-import { addUserToPoints, giveUserAPoint, countGivenPoint, testDates } from "../../db.js";
 import givePoint from "../message_replies/givePoint.js"
+import { addUserToPoints } from "../../db.js";
+
 
 export default {
 	name: "messageCreate",
