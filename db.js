@@ -38,24 +38,33 @@ export const addUserToPoints = (userId) => {
 	db.write();
 };
 
+export const testDates = (userId, interaction) => {
+	const currentDate = Date.now()
+	let { lastPointsGivenBy } = points[userId];
+	const newLastPointsGivenBy = lastPointsGivenBy.filter(({givenBy, date}) => {
+			const pointDate = new Date(date);
+			const dateComparison = currentDate - pointDate;
+			return dateComparison <	 (1000 * 60)
+	})
+	const isValidPoint = newLastPointsGivenBy.every(({givenBy}) => givenBy !== interaction.author.id)
+	lastPointsGivenBy = newLastPointsGivenBy;
+	db.write()
+	return isValidPoint
+}
+
 
 export const giveUserAPoint =  (userId, interaction) => {
 	const newPoint = new PointsObject(interaction.author.id, Date.now(), interaction.channel.name);
 	const newPointGivenBy = new PointsObject(interaction.author.id, Date.now());
 	points[userId].pointsReceived.push(newPoint);
 	points[userId].lastPointsGivenBy.push(newPointGivenBy);
-
-
 	db.write()
 }
 
 
 
-
-
-export const countGivenPoint = (userId) => {
-// this needs to be an object with where the key becomes the channel and the value is a count.
-// go get keys, check if channel is in key, if so add one to value, if not add it to object and set to zero
-console.log('under construction')
+export const countGivenPoint = (userId, messageChannel) => {
+	const pointsReceived = points[userId].pointsReceived.filter(({channel}) => channel === messageChannel)
+	return pointsReceived.length
 }
 
