@@ -3,14 +3,12 @@ import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
 import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
-import { addUserToPoints, giveUserAPoint, countGivenPoint } from "../../db.js";
+import { addUserToPoints, giveUserAPoint, countGivenPoint, testDates } from "../../db.js";
 
 
 export default {
 	name: "messageCreate",
 	execute(interaction) {
-
-
 		// Avoid an iteration
 		if (interaction.author.bot) return;
 
@@ -49,18 +47,25 @@ export default {
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
 				}
 			}
-			if (command.at(1) === "@" && command.includes(suffix)) {
+			if (command.at(1) === "@" && command.includes(suffix)) { 
 				const mentionId = getUserIdFromMention(command);
+				if(!mentionId) return //there's no mention id;
 				if (interaction.author.id === mentionId) {
-					return interaction.channel.send("You cannot give a point to yourself");
+					return interaction.channel.send(`Sorry <@!${interaction.author.id}>, You cannot give a point to yourself.`);
 				}
 				// try to add the user to the DB, if they are already there
 				// db function will reject this
 				addUserToPoints(mentionId);
-
-				giveUserAPoint(mentionId, interaction);
-				countGivenPoint(interaction.author.id);
-				interaction.channel.send("Added a point!");
+				const canAddPoint = testDates(mentionId, interaction)
+				if (!canAddPoint){
+					return interaction.channel.send(`Sorry <@!${interaction.author.id}>, You need to wait at least 1min to give point to <@!${mentionId}> again`)
+				}
+				if (canAddPoint) {
+					giveUserAPoint(mentionId, interaction);
+					const {username, discriminator} = interaction.author;
+					const userPoints = countGivenPoint(mentionId, interaction.channel.name);
+					interaction.channel.send(`Point added! Now <@!${mentionId}> has **${userPoints} points**`);
+			}
 			}
 		});
 
