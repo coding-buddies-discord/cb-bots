@@ -1,5 +1,5 @@
 import sendPing from "./sendPing.js";
-import helpCommand from "./helpCommand";
+import helpCommand from "./helpCommand.js";
 
 export { sendPing };
 export { helpCommand };
