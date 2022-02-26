@@ -7,7 +7,7 @@ import channelPointsMessage from "../message_replies/channelPoints.js";
 import { addUserToPoints, channelPoints } from "../../db.js";
 
 import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
-import { MessageEmbed } from "discord.js";
+
 
 
 export default {
