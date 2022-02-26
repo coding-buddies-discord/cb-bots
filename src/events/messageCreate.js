@@ -3,7 +3,9 @@ import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
 import givePoint from "../message_replies/givePoint.js";
-import { addUserToPoints } from "../../db.js";
+import channelPointsMessage from "../message_replies/channelPoints.js";
+import { addUserToPoints, channelPoints } from "../../db.js";
+
 
 
 export default {
@@ -42,6 +44,9 @@ export default {
 					break;
 				case "!pong":
 					interaction.channel.send("ping");
+					break;
+				case "!points":
+					channelPointsMessage(interaction);
 					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
