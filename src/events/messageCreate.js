@@ -3,7 +3,7 @@ import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
 import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
-import { MessageEmbed } from "discord.js";
+
 
 
 export default {
@@ -37,15 +37,6 @@ export default {
 					break;
 				case "!pong":
 					interaction.channel.send("ping");
-					break;
-				case "!help":
-					const helpCommand = (interaction, client) => {
-						const embed = new MessageEmbed()
-							.setColor("RANDOM")
-							.setDescription("blah blah blah")
-						interaction.channel.send({ embeds: [embed] });
-					}
-					helpCommand(interaction, client);
 					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
