@@ -6,6 +6,8 @@ import givePoint from "../message_replies/givePoint.js";
 import channelPointsMessage from "../message_replies/channelPoints.js";
 import { addUserToPoints, channelPoints } from "../../db.js";
 
+import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
+import { MessageEmbed } from "discord.js";
 
 
 export default {
@@ -47,6 +49,14 @@ export default {
 					break;
 				case "!points":
 					channelPointsMessage(interaction);
+				case "!help":
+					const helpCommand = (interaction, client) => {
+						const embed = new MessageEmbed()
+							.setColor("RANDOM")
+							.setDescription("blah blah blah")
+						interaction.channel.send({ embeds: [embed] });
+					}
+					helpCommand(interaction, client);
 					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
