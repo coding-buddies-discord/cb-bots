@@ -1,4 +1,4 @@
 export const getUserIdFromMention = (command) => {
-	const subString = command.split(/[!>]/);
-	return subString[1];
-};
+	const userId = command.match(/\d+/g);
+	return  userId[0] || false;
+}

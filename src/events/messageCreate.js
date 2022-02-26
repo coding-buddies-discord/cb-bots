@@ -2,7 +2,8 @@
 import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
-import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
+import givePoint from "../message_replies/givePoint.js";
+import { addUserToPoints } from "../../db.js";
 
 
 export default {
@@ -10,6 +11,11 @@ export default {
 	execute(interaction) {
 		// Avoid an iteration
 		if (interaction.author.bot) return;
+
+		// try to add the user to the points DB, if they are already there
+		// db function will reject this
+		addUserToPoints(interaction.author.id);
+
 		// Prefix and message content
 		const { prefix, suffix } = config;
 		const { content } = interaction;
@@ -42,13 +48,10 @@ export default {
 				}
 			}
 			if (command.at(1) === "@" && command.includes(suffix)) {
-				const mentionId = getUserIdFromMention(command);
-				if (interaction.author.id === mentionId) {
-					return interaction.channel.send("You cannot give a point to yourself");
-				}
-				interaction.channel.send("Added a point!");
+				givePoint(command, interaction);
 			}
 		});
 
 	},
 };
+
