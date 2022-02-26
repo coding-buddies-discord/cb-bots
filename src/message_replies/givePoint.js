@@ -11,7 +11,7 @@ async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
 
 	if (!mentionId) return;
-	const validUser = await isUserValid(interaction, mentionId);
+	const { validUser } = await isUserValid(interaction, mentionId);
 	if (!validUser) {
 		interaction.channel.send(
 			`Sorry <@!${interaction.author.id}>, It appears that ${command} is an **invalid user** or **isn't currently in the server**`,
