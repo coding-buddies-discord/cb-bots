@@ -2,7 +2,7 @@
 import config from "../../config.js";
 import client from "../index.js";
 import * as messageReplies from "../message_replies/index.js";
-import givePoint from "../message_replies/givePoint.js"
+import givePoint from "../message_replies/givePoint.js";
 import { addUserToPoints } from "../../db.js";
 
 
@@ -47,8 +47,8 @@ export default {
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
 				}
 			}
-			if (command.at(1) === "@" && command.includes(suffix)) { 
-				givePoint(command, interaction)
+			if (command.at(1) === "@" && command.includes(suffix)) {
+				givePoint(command, interaction);
 			}
 		});
 

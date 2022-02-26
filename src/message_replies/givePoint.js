@@ -10,37 +10,34 @@ import {
 async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
 
-	if (!mentionId) return; //there's no mention id;
+	if (!mentionId) return;
 	const validUser = await isUserValid(interaction, mentionId);
 	if (!validUser) {
 		interaction.channel.send(
-			`Sorry <@!${interaction.author.id}>, It appears that ${command} is an **invalid user** or **isn't currently in the server**`
+			`Sorry <@!${interaction.author.id}>, It appears that ${command} is an **invalid user** or **isn't currently in the server**`,
 		);
-	} else if (interaction.author.id === mentionId) {
+	}
+	else if (interaction.author.id === mentionId) {
 		interaction.channel.send(
-			`Sorry <@!${interaction.author.id}>, You cannot give a point to yourself.`
+			`Sorry <@!${interaction.author.id}>, You cannot give a point to yourself.`,
 		);
-	} else {
+	}
+	else {
 		// try to add the user to the DB, if they are already there
 		// db function will reject this
 		addUserToPoints(mentionId);
 		const canAddPoint = testDates(mentionId, interaction);
 		if (!canAddPoint) {
 			interaction.channel.send(
-				`Sorry <@!${interaction.author.id}>, You need to wait at least 1min to give point to <@!${mentionId}> again`
+				`Sorry <@!${interaction.author.id}>, You need to wait at least 1min to give point to <@!${mentionId}> again`,
 			);
 		}
 		if (canAddPoint) {
 			giveUserAPoint(mentionId, interaction);
-			const { username, discriminator } = interaction.author;
-			const userPoints = countGivenPoint(
-				mentionId,
-				interaction.channel.name
-			);
+			const userPoints = countGivenPoint(mentionId, interaction.channel.name);
 			interaction.channel.send(
-				`Point added! Now <@!${mentionId}> has **${userPoints} points**`
+				`Point added! Now <@!${mentionId}> has **${userPoints} points**`,
 			);
-			console.log("Point added!")
 		}
 	}
 }
