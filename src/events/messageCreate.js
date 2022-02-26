@@ -50,13 +50,7 @@ export default {
 				case "!points":
 					channelPointsMessage(interaction);
 				case "!help":
-					const helpCommand = (interaction, client) => {
-						const embed = new MessageEmbed()
-							.setColor("RANDOM")
-							.setDescription("blah blah blah")
-						interaction.channel.send({ embeds: [embed] });
-					}
-					helpCommand(interaction, client);
+					messageReplies.helpCommand(interaction, client);
 					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
