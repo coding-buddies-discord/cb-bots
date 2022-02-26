@@ -10,6 +10,4 @@ const helpCommand = (interaction, client) => {
     interaction.reply({ embeds: [embed] });
 }
 
-helpCommand(interaction, client);
-
 export default helpCommand;
