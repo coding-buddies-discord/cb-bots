@@ -38,6 +38,9 @@ export default {
 				case "!pong":
 					interaction.channel.send("ping");
 					break;
+				case "!help":
+					messageReplies.helpCommand(interaction, client);
+					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
 				}
