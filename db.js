@@ -68,3 +68,12 @@ export const countGivenPoint = (userId, messageChannel) => {
 	return pointsReceived.length
 }
 
+export const channelPoints = (channelName, nameAmount = 1) => {
+	const allUsers = Object.keys(points);
+	const listOfPoints = allUsers.map(userID => {
+		const points = countGivenPoint(userID, channelName);
+		return {userID, points}
+	})
+	const sortedList = listOfPoints.sort((a, b) => b.points -a.points)
+	return sortedList.slice(0,nameAmount);
+}
