@@ -21,12 +21,12 @@ class PointsObject {
 	}
 }
 
-// class PointGivenBy {
-// 	constructor(userId, date) {
-// 		this.userId = userId,
-// 		this.date = date;
-// 	}
-// }
+class PointGivenBy {
+	constructor(userId, date) {
+		this.userId = userId,
+		this.date = date;
+	}
+}
 
 export const addUserToPoints = (userId) => {
 	// eslint-disable-next-line no-prototype-builtins
@@ -56,7 +56,7 @@ export const testDates = (userId, interaction) => {
 
 export const giveUserAPoint = (userId, interaction) => {
 	const newPoint = new PointsObject(interaction.author.id, Date.now(), interaction.channel.name);
-	const newPointGivenBy = new PointsObject(interaction.author.id, Date.now());
+	const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 	points[userId].pointsReceived.push(newPoint);
 	points[userId].lastPointsGivenBy.push(newPointGivenBy);
 	db.write();
