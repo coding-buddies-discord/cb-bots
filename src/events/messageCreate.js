@@ -8,6 +8,7 @@ import { addUserToPoints, channelPoints } from "../../db.js";
 
 
 
+
 export default {
 	name: "messageCreate",
 	execute(interaction) {
