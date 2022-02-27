@@ -1,4 +1,6 @@
 import { LowSync, JSONFileSync } from "lowdb";
+import { checkDB } from "./src/database/checkDB.js"
+checkDB()
 // import set from "lodash";
 
 const db = new LowSync(new JSONFileSync("db.json"));
