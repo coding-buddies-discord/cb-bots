@@ -6,8 +6,6 @@ import givePoint from "../message_replies/givePoint.js";
 import channelPointsMessage from "../message_replies/channelPoints.js";
 import { addUserToPoints, channelPoints } from "../../db.js";
 
-import { getUserIdFromMention } from "../utils/getUserIdFromMention.js";
-
 
 
 export default {
