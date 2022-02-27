@@ -48,6 +48,7 @@ export default {
 					break;
 				case "!points":
 					channelPointsMessage(interaction);
+					break;
 				case "!help":
 					messageReplies.helpCommand(interaction, client);
 					break;
