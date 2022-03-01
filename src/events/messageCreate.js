@@ -8,6 +8,7 @@ import { addUserToPoints, channelPoints } from "../../db.js";
 
 
 
+
 export default {
 	name: "messageCreate",
 	execute(interaction) {
@@ -47,6 +48,9 @@ export default {
 					break;
 				case "!points":
 					channelPointsMessage(interaction);
+					break;
+				case "!help":
+					messageReplies.helpCommand(interaction, client);
 					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);
