@@ -1,10 +1,10 @@
 import { LowSync, JSONFileSync } from "lowdb";
-import { checkDB } from "./src/database/checkDB.js"
-checkDB()
+import fs from "fs";
 // import set from "lodash";
 
 const db = new LowSync(new JSONFileSync("db.json"));
 db.read();
+
 const { points } = db.data;
 
 class PointsUser {
@@ -29,6 +29,41 @@ class PointGivenBy {
 		this.date = date;
 	}
 }
+
+const createDbProps = (db) => {
+	const props = ["points", "example"];
+	for (const prop of props) {
+		const isInDB = prop in db.data;
+		if (!isInDB) {
+			db.data[prop] = {};
+		}
+	}
+	console.log("added necessary props to db.json")
+};
+
+const checkDB = (database = db, path="db.json") => {
+	console.log("checking...");
+	try {
+		const dbExists = fs.existsSync(path);
+		if (!dbExists) {
+			fs.appendFileSync("db.json", "{}");
+			console.log("db.json created")
+		}
+		if (fs.readFileSync(path).length === 0) {
+			fs.appendFileSync("db.json", "{}");
+			console.log("db.json was empty, added an empty object")
+		}
+		createDbProps(database);
+		database.write();
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+
+
+
+
 
 export const addUserToPoints = (userId) => {
 	// eslint-disable-next-line no-prototype-builtins
@@ -79,3 +114,7 @@ export const channelPoints = (channelName, nameAmount = 1) => {
 	const sortedList = listOfPoints.sort((a, b) => b.points -a.points)
 	return sortedList.slice(0,nameAmount);
 }
+
+
+
+checkDB()
