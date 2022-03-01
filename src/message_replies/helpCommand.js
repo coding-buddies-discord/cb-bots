@@ -14,6 +14,7 @@ const helpCommand = (interaction, client) => {
         for (let i = 0; i < commandsArray.length; i++) {
             newArray.push(`\`${commandsArray[i].command}\`: ${commandsArray[i].description.concat(`\n`)}`);
         }
+        newArray.sort();
         return newArray.join(" ");
    }
 
