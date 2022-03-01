@@ -15,7 +15,7 @@ const helpCommand = (interaction, client) => {
             newArray.push(`\`${commandsArray[i].command}\`: ${commandsArray[i].description.concat(`\n`)}`);
         }
         newArray.sort();
-        return newArray.join(" ");
+        return newArray.join("");
    }
 
     const embed = new MessageEmbed()
