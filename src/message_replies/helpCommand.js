@@ -1,18 +1,11 @@
 import { MessageEmbed } from "discord.js";
+import commandsList from "./commandsList.js";
 
 const helpCommand = (interaction, client) => {
-
-    //Add new commands to this array.
-    const commandsArray = [
-        {command: `!ping`, description: `View the bot response time in milliseconds.`},
-        {command: `@user++`, description: `If a user has been helpful to you, mention their username and add ++ to give them a point.`},
-        {command: `!points`, description: `View the top 5 users who have attained the most points in the current channel.`}
-    ]
-
    function outputCommands() {
         const newArray = []
-        for (let i = 0; i < commandsArray.length; i++) {
-            newArray.push(`\`${commandsArray[i].command}\`: ${commandsArray[i].description.concat(`\n`)}`);
+        for (let i = 0; i < commandsList.length; i++) {
+            newArray.push(`\`${commandsList[i].command}\`: ${commandsList[i].description}\n`);
         }
         newArray.sort();
         return newArray.join("");
