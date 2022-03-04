@@ -10,16 +10,20 @@ import {
 async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
 
-	if (!mentionId) return;
+	if (!mentionId) return  interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
+
 	const { validUser } = await isUserValid(interaction, mentionId);
+
+	// TODO: this donesn't wonk
 	if (!validUser) {
 		interaction.channel.send(
-			`Sorry <@!${interaction.author.id}>, It appears that ${command} is an **invalid user** or **isn't currently in the server**`,
+			// eslint-disable-next-line no-useless-escape
+			`Sorry <@!${interaction.author.id}>, idk who ${command} is. ¯\\_(ツ)_/¯`,
 		);
 	}
 	else if (interaction.author.id === mentionId) {
 		interaction.channel.send(
-			`Sorry <@!${interaction.author.id}>, You cannot give a point to yourself.`,
+			`Lmao <@!${interaction.author.id}>, you can't give yourself a point.`,
 		);
 	}
 	else {
@@ -29,14 +33,16 @@ async function givePoint(command, interaction) {
 		const canAddPoint = testDates(mentionId, interaction);
 		if (!canAddPoint) {
 			interaction.channel.send(
-				`Sorry <@!${interaction.author.id}>, You need to wait at least 1min to give point to <@!${mentionId}> again`,
+				`Yo <@!${interaction.author.id}>, you have to wait **at least** a minute to give <@!${mentionId}> another point.😅`,
 			);
 		}
 		if (canAddPoint) {
 			giveUserAPoint(mentionId, interaction);
 			const userPoints = countGivenPoint(mentionId, interaction.channelId);
+			const emojis = [ "🔥", "💯", "💃🏾", "💪🏾"];
+			const randomNumber = Math.floor(Math.random() * 3);
 			interaction.channel.send(
-				`Point added! Now <@!${mentionId}> has **${userPoints} points**`,
+				`Woo! <@!${mentionId}> has **${userPoints} points** ${emojis[randomNumber]}`,
 			);
 		}
 	}
