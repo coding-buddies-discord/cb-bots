@@ -1,5 +1,5 @@
 const invalidPoint = (interaction, mentionId) => {
-	interaction.channel.send(`Sorry <@!${interaction.author.id}>, You need to wait at least 1min to give another point to <@!${mentionId}>.`);
+	interaction.channel.send(`Yo <@!${interaction.author.id}>, you have to wait at least a minute to give <@!${mentionId}> another point.😅`);
 };
 
 export default invalidPoint;

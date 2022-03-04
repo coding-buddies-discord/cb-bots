@@ -1,11 +1,14 @@
 import { channelPoints } from "../../db.js";
 import { isUserValid } from "../utils/isUserValid.js";
 
-const channelPointsMessage = async (interaction) => {
+const reportChannelPoints = async (interaction) => {
 	const { channelId } = interaction;
 	const topPointEarners = channelPoints(channelId, 5);
 
-	if (topPointEarners.length === 0) return interaction.reply("There's no points in this channel yet.");
+	let currentChannelPoints = 0;
+	topPointEarners.forEach((obj) => currentChannelPoints += obj.points);
+
+	if (currentChannelPoints === 0) return interaction.reply("There's no points in this channel yet, you should give someone one.😏");
 
 	const validUsers = [];
 	for (const { userID, points } of topPointEarners) {
@@ -16,9 +19,9 @@ const channelPointsMessage = async (interaction) => {
 
 	const message = validUsers.reduce((acc, { username, points }) => {
 		return acc + `${username}: ${points} Points\n`;
-	}, `Those are the top ${validUsers.length} on <#${channelId}>:\n`);
+	}, `<#${channelId}> **top ${validUsers.length}**:\n`);
 
 	interaction.reply(message);
 };
 
-export default channelPointsMessage;
+export default reportChannelPoints;
