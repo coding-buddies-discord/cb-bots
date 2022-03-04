@@ -8,7 +8,7 @@ const reportChannelPoints = async (interaction) => {
 	let currentChannelPoints = 0;
 	topPointEarners.forEach((obj) => currentChannelPoints += obj.points);
 
-	if (currentChannelPoints === 0) return interaction.reply("There's no points in this channel yet, you should give someone one.😏");
+	if (currentChannelPoints === 0) return interaction.reply("There are no points in this channel yet, you should give someone one.😏");
 
 	const validUsers = [];
 	for (const { userID, points } of topPointEarners) {

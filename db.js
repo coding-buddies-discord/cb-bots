@@ -2,11 +2,6 @@ import { LowSync, JSONFileSync } from "lowdb";
 import fs from "fs";
 // import set from "lodash";
 
-const db = new LowSync(new JSONFileSync("db.json"));
-db.read();
-
-const { points } = db.data;
-
 class PointsUser {
 	constructor() {
 		this.pointsReceived = [],
@@ -42,10 +37,11 @@ const createDbProps = (db) => {
 	console.log("added necessary props to db.json");
 };
 
-const checkDB = (database = db, path = "db.json") => {
+const checkDB = (path = "db.json") => {
 	console.log("checking...");
 	try {
 		const dbExists = fs.existsSync(path);
+
 		if (!dbExists) {
 			fs.appendFileSync("db.json", "{}");
 			console.log("db.json created");
@@ -54,6 +50,8 @@ const checkDB = (database = db, path = "db.json") => {
 			fs.appendFileSync("db.json", "{}");
 			console.log("db.json was empty, added an empty object");
 		}
+		const database = new LowSync(new JSONFileSync("db.json"));
+		database.read();
 		createDbProps(database);
 		database.write();
 	}
@@ -62,8 +60,17 @@ const checkDB = (database = db, path = "db.json") => {
 	}
 };
 
+checkDB();
+
+
+
+const db = new LowSync(new JSONFileSync("db.json"));
+db.read();
+
+
 export const addUserToPoints = (userId) => {
 	// eslint-disable-next-line no-prototype-builtins
+	const { points } = db.data;
 	if (points.hasOwnProperty(userId)) return;
 
 	const newUserObject = {};
@@ -75,6 +82,7 @@ export const addUserToPoints = (userId) => {
 
 export const testDates = (userId, interaction) => {
 	const currentDate = Date.now();
+	const { points } = db.data;
 	let { lastPointsGivenBy } = points[userId];
 	const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
 		const pointDate = new Date(date);
@@ -89,6 +97,7 @@ export const testDates = (userId, interaction) => {
 };
 
 export const giveUserAPoint = (userId, interaction) => {
+	const { points } = db.data;
 	const newPoint = new PointsObject(interaction.author.id, Date.now(), interaction.channelId);
 	const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 	points[userId].pointsReceived.push(newPoint);
@@ -98,11 +107,13 @@ export const giveUserAPoint = (userId, interaction) => {
 
 
 export const countGivenPoint = (userId, messageChannel) => {
+	const { points } = db.data;
 	const pointsReceived = points[userId].pointsReceived.filter(({ channel }) => channel === messageChannel);
 	return pointsReceived.length;
 };
 
 export const channelPoints = (channelName, nameAmount = 1) => {
+	const { points } = db.data;
 	const allUsers = Object.keys(points);
 	const listOfPoints = allUsers.map(userID => {
 		// eslint-disable-next-line no-shadow
@@ -114,4 +125,3 @@ export const channelPoints = (channelName, nameAmount = 1) => {
 };
 
 
-checkDB();

@@ -10,16 +10,15 @@ import {
 async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
 
-	if (!mentionId) return;
+	if (!mentionId) return  interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
 
 	const { validUser } = await isUserValid(interaction, mentionId);
-
 
 	// TODO: this donesn't wonk
 	if (!validUser) {
 		interaction.channel.send(
 			// eslint-disable-next-line no-useless-escape
-			`Sorry <@!${interaction.author.id}>, idk who ${command} is. ¯\_(ツ)_/¯`,
+			`Sorry <@!${interaction.author.id}>, idk who ${command} is. ¯\\_(ツ)_/¯`,
 		);
 	}
 	else if (interaction.author.id === mentionId) {
