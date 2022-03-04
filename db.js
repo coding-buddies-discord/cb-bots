@@ -30,6 +30,7 @@ class PointGivenBy {
 	}
 }
 
+// eslint-disable-next-line no-shadow
 const createDbProps = (db) => {
 	const props = ["points", "example"];
 	for (const prop of props) {
@@ -80,14 +81,15 @@ export const testDates = (userId, interaction) => {
 		const dateComparison = currentDate - pointDate;
 		return dateComparison <	 (1000 * 60);
 	});
-	const isValidPoint = newLastPointsGivenBy.every( ({ userId }) => userId !== interaction.author.id)
+	// eslint-disable-next-line no-shadow
+	const isValidPoint = newLastPointsGivenBy.every(({ userId }) => userId !== interaction.author.id);
 	lastPointsGivenBy = newLastPointsGivenBy;
 	db.write();
 	return isValidPoint;
 };
 
 export const giveUserAPoint = (userId, interaction) => {
-	const newPoint = new PointsObject(interaction.author.id, Date.now(), channelId);
+	const newPoint = new PointsObject(interaction.author.id, Date.now(), interaction.channelId);
 	const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 	points[userId].pointsReceived.push(newPoint);
 	points[userId].lastPointsGivenBy.push(newPointGivenBy);
