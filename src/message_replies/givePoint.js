@@ -34,7 +34,7 @@ async function givePoint(command, interaction) {
 		}
 		if (canAddPoint) {
 			giveUserAPoint(mentionId, interaction);
-			const userPoints = countGivenPoint(mentionId, interaction.channel.name);
+			const userPoints = countGivenPoint(mentionId, interaction.channelId);
 			interaction.channel.send(
 				`Point added! Now <@!${mentionId}> has **${userPoints} points**`,
 			);
