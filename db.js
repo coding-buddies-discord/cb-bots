@@ -63,7 +63,6 @@ const checkDB = (path = "db.json") => {
 checkDB();
 
 
-
 const db = new LowSync(new JSONFileSync("db.json"));
 db.read();
 
@@ -123,5 +122,4 @@ export const channelPoints = (channelName, nameAmount = 1) => {
 	const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
 	return sortedList.slice(0, nameAmount);
 };
-
 

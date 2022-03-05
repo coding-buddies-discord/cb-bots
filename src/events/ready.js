@@ -6,8 +6,8 @@ export default {
 		console.log(`Ready as ${username}#${discriminator}!`);
 
 		client.user.setPresence({
-			status: "idle",
-			activities: [{ name: "Being developed by the buddies 🔥", type: "PLAYING" }],
+			status: "online",
+			activities: [{ name: "The buddies bot 🤖", type: "PLAYING" }],
 		});
 	},
 };
