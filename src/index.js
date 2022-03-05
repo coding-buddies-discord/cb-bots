@@ -1,10 +1,12 @@
 // Require the necessary discord.js classes
 import { Client, Intents } from "discord.js";
-import config from "../config.js";
 // import db from '../db.js';
 import * as eventsObj from "./events/index.js";
+import dotenv from "dotenv";
 
-const { token } = config;
+dotenv.config();
+
+const token = process.env.TOKEN;
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS] });
 

@@ -1,6 +1,5 @@
 # Project specific files
 config.json
-config.js
 db.json
 
 # compiled output
