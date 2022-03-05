@@ -1,6 +1,5 @@
 // Require the necessary discord.js classes
 import { Client, Intents } from "discord.js";
-import config from "../config.js";
 // import db from '../db.js';
 import * as eventsObj from "./events/index.js";
 import dotenv from "dotenv";
