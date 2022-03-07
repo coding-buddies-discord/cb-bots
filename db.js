@@ -27,14 +27,15 @@ class PointGivenBy {
 
 // eslint-disable-next-line no-shadow
 const createDbProps = (db) => {
-	const props = ["points", "example"];
-	for (const prop of props) {
-		const isInDB = prop in db.data;
-		if (!isInDB) {
-			db.data[prop] = {};
-		}
-	}
-	console.log("added necessary props to db.json");
+	const serverProps = ["867244851098288149", "939629912623575090"];
+	const featureProps = ["points", "example"];
+	serverProps.forEach((prop) => {
+		db.data[prop] = {};
+		featureProps.forEach((fprop) => {
+			db.data[prop][fprop] = {};
+		});
+	});
+	console.log("added necessary server and feature props to db.json");
 };
 
 const checkDB = (path = "db.json") => {
@@ -63,14 +64,13 @@ const checkDB = (path = "db.json") => {
 checkDB();
 
 
-
 const db = new LowSync(new JSONFileSync("db.json"));
 db.read();
 
 
-export const addUserToPoints = (userId) => {
+export const addUserToPoints = (userId, guildId) => {
 	// eslint-disable-next-line no-prototype-builtins
-	const { points } = db.data;
+	const { points } = db.data[guildId];
 	if (points.hasOwnProperty(userId)) return;
 
 	const newUserObject = {};
@@ -81,8 +81,9 @@ export const addUserToPoints = (userId) => {
 };
 
 export const testDates = (userId, interaction) => {
+	const { guildId } = interaction;
 	const currentDate = Date.now();
-	const { points } = db.data;
+	const { points } = db.data[guildId];
 	let { lastPointsGivenBy } = points[userId];
 	const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
 		const pointDate = new Date(date);
@@ -97,7 +98,8 @@ export const testDates = (userId, interaction) => {
 };
 
 export const giveUserAPoint = (userId, interaction) => {
-	const { points } = db.data;
+	const { guildId } = interaction;
+	const { points } = db.data[guildId];
 	const newPoint = new PointsObject(interaction.author.id, Date.now(), interaction.channelId);
 	const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 	points[userId].pointsReceived.push(newPoint);
@@ -106,22 +108,21 @@ export const giveUserAPoint = (userId, interaction) => {
 };
 
 
-export const countGivenPoint = (userId, messageChannel) => {
-	const { points } = db.data;
+export const countGivenPoint = (userId, messageChannel, guildId) => {
+	const { points } = db.data[guildId];
 	const pointsReceived = points[userId].pointsReceived.filter(({ channel }) => channel === messageChannel);
 	return pointsReceived.length;
 };
 
-export const channelPoints = (channelName, nameAmount = 1) => {
-	const { points } = db.data;
+export const channelPoints = (channelName, nameAmount = 1, guildId) => {
+	const { points } = db.data[guildId];
 	const allUsers = Object.keys(points);
 	const listOfPoints = allUsers.map(userID => {
 		// eslint-disable-next-line no-shadow
-		const points = countGivenPoint(userID, channelName);
+		const points = countGivenPoint(userID, channelName, guildId);
 		return { userID, points };
 	});
 	const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
 	return sortedList.slice(0, nameAmount);
 };
-
 
