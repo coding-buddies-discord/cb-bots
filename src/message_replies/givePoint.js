@@ -10,7 +10,7 @@ import {
 async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
 
-	if (!mentionId) return  interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
+	if (!mentionId) return interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
 
 	const { validUser } = await isUserValid(interaction, mentionId);
 
@@ -29,7 +29,7 @@ async function givePoint(command, interaction) {
 	else {
 		// try to add the user to the DB, if they are already there
 		// db function will reject this
-		addUserToPoints(mentionId);
+		addUserToPoints(mentionId, interaction.guildId);
 		const canAddPoint = testDates(mentionId, interaction);
 		if (!canAddPoint) {
 			interaction.channel.send(
@@ -38,7 +38,7 @@ async function givePoint(command, interaction) {
 		}
 		if (canAddPoint) {
 			giveUserAPoint(mentionId, interaction);
-			const userPoints = countGivenPoint(mentionId, interaction.channelId);
+			const userPoints = countGivenPoint(mentionId, interaction.channelId, interaction.guildId);
 			const emojis = [ "🔥", "💯", "💃🏾", "💪🏾"];
 			const randomNumber = Math.floor(Math.random() * 3);
 			interaction.channel.send(

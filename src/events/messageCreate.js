@@ -13,7 +13,7 @@ export default {
 
 		// try to add the user to the points DB, if they are already there
 		// db function will reject this
-		addUserToPoints(interaction.author.id);
+		addUserToPoints(interaction.author.id, interaction.guildId);
 
 		// Prefix and message content
 		const { prefix, suffix } = config;
@@ -47,6 +47,9 @@ export default {
 					break;
 				case "!help":
 					helpCommand(interaction, client);
+					break;
+				case "!test":
+					console.log(interaction);
 					break;
 				default:
 					interaction.channel.send(`I didnt recognize the request "${command}"`);

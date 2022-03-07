@@ -3,7 +3,7 @@ import { isUserValid } from "../utils/isUserValid.js";
 
 const reportChannelPoints = async (interaction) => {
 	const { channelId } = interaction;
-	const topPointEarners = channelPoints(channelId, 5);
+	const topPointEarners = channelPoints(channelId, 5, interaction.guildId);
 
 	let currentChannelPoints = 0;
 	topPointEarners.forEach((obj) => currentChannelPoints += obj.points);
