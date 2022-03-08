@@ -10,7 +10,7 @@ import {
 async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
 
-	if (!mentionId) return  interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
+	if (!mentionId) return interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
 
 	const { validUser } = await isUserValid(interaction, mentionId);
 

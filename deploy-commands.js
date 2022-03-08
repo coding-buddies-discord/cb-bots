@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import config from "./config.js";
 
-const { clientId, guildId, token } = config;
-
+const clientId = process.env.CLIENTID;
+const token = process.env.TOKEN;
+const guildId = process.env.GUILDID;
 
 const commands = [
 	new SlashCommandBuilder().setName("when").setDescription("Who"),
