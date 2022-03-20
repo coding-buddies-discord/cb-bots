@@ -1,9 +1,13 @@
 /* eslint-disable no-case-declarations */
 import config from "../../config.js";
 import client from "../index.js";
-import { sendPing, reportChannelPoints, givePoint, helpCommand } from "../message_replies/index.js";
+import {
+	sendPing,
+	reportChannelPoints,
+	givePoint,
+	helpCommand,
+} from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
-
 
 export default {
 	name: "messageCreate",
@@ -16,26 +20,30 @@ export default {
 		addUserToPoints(interaction.author.id);
 
 		// Prefix and message content
-		const { prefix, suffix } = config;
+		const { suffix } = config;
 		const { content } = interaction;
 
-		// goes through each word in the message to see if it should or shouldnt be a command
+		// finds prefix at the beggining
+		const findPrefix = content.match(/^!\w+/);
+		// if there's a match, tries to grab the first value of the array or undefined;
+		const prefixCommand = findPrefix?.[0];
+
 		const commands = content.split(" ").filter((word) => {
-			if (word.length === 1) {return false;}
-			// this is to protect from someone sending a word with a prefix and suffix
-			if (word.indexOf(prefix) === 0 && word.indexOf(suffix) === word.length - 2) { return false; }
-			if (word.indexOf(prefix) === 0 || word.indexOf(suffix) === word.length - 2) { return true; }
-			else {return false;}
+			if (word.length <= 5) {
+				return false;
+			} else if (word.indexOf(suffix) === word.length - 2) {
+				return true;
+			} else {
+				return false;
+			}
 		});
 
-		if (!commands.length) {
+		if (!commands.length && !prefixCommand) {
 			return;
 		}
 
-		commands.forEach((command) => {
-			// if the prefix is at beginning of the word, then go through all the possible prefix commands
-			if (command.at(0) === prefix) {
-				switch (command.toLowerCase()) {
+		if (prefixCommand) {
+			switch (prefixCommand.toLowerCase()) {
 				case "!ping":
 					sendPing(interaction, client);
 					break;
@@ -50,14 +58,14 @@ export default {
 					break;
 				default:
 					//interaction.channel.send(`I didnt recognize the request "${command}"`);
-					return
-				}
+					return;
 			}
-			if (command.at(1) === "@" && command.includes(suffix)) {
-				givePoint(command, interaction);
-			}
-		});
+		}
 
+		if (commands.length) {
+			commands.forEach((command) => {
+				givePoint(command, interaction);
+			});
+		}
 	},
 };
-
