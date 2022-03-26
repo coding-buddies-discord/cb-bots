@@ -3,6 +3,8 @@ import { Client, Intents } from "discord.js";
 // import db from '../db.js';
 import * as eventsObj from "./events/index.js";
 import dotenv from "dotenv";
+//import job from './events/usersActive.js'
+
 
 dotenv.config();
 
@@ -20,3 +22,5 @@ events.forEach((event) => {
 // Login to Discord with your client's token
 client.login(token);
 export default client;
+
+//job.start()
