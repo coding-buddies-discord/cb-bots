@@ -5,23 +5,23 @@ import fs from "fs";
 class PointsUser {
 	constructor() {
 		this.pointsReceived = [],
-		this.pointsGiven = [],
-		this.lastPointsGivenBy = [];
+			this.pointsGiven = [],
+			this.lastPointsGivenBy = [];
 	}
 }
 
 class PointsObject {
 	constructor(giver, date, channel) {
 		this.givenBy = giver,
-		this.date = date,
-		this.channel = channel;
+			this.date = date,
+			this.channel = channel;
 	}
 }
 
 class PointGivenBy {
 	constructor(userId, date) {
 		this.userId = userId,
-		this.date = date;
+			this.date = date;
 	}
 }
 
@@ -30,9 +30,13 @@ const createDbProps = (db) => {
 	const serverProps = ["867244851098288149", "939629912623575090"];
 	const featureProps = ["points", "example"];
 	serverProps.forEach((prop) => {
-		db.data[prop] = {};
+		if (!db.data[prop]) {
+			db.data[prop] = {};
+		}
 		featureProps.forEach((fprop) => {
-			db.data[prop][fprop] = {};
+			if (!db.data[prop][fprop]) {
+				db.data[prop][fprop] = {};
+			}
 		});
 	});
 	console.log("added necessary server and feature props to db.json");
@@ -88,7 +92,7 @@ export const testDates = (userId, interaction) => {
 	const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
 		const pointDate = new Date(date);
 		const dateComparison = currentDate - pointDate;
-		return dateComparison <	 (1000 * 60);
+		return dateComparison < (1000 * 60);
 	});
 	// eslint-disable-next-line no-shadow
 	const isValidPoint = newLastPointsGivenBy.every(({ userId }) => userId !== interaction.author.id);
