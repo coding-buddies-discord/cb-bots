@@ -38,11 +38,13 @@ async function givePoint(command, interaction) {
 		}
 		if (canAddPoint) {
 			giveUserAPoint(mentionId, interaction);
-			const userPoints = countGivenPoint(mentionId, interaction.channelId);
+			const userPoints = await countGivenPoint(mentionId, interaction.channelId);
 			const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
 			const randomNumber = Math.floor(Math.random() * 3);
 			interaction.channel.send(
+
 				`Woo! <@!${mentionId}> has **${userPoints} points** ${emojis[randomNumber]}`,
+
 			);
 		}
 	}

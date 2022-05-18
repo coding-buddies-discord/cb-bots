@@ -1,13 +1,6 @@
-import { LowSync, JSONFileSync } from "lowdb";
-import fs from "fs";
 import { MongoClient } from "mongodb";
 
-
-// import set from "lodash";
-
 const client = new MongoClient("mongodb://0.0.0.0:27017/");
-
-
 
 const connectDB = async () => {
 	try {
@@ -69,7 +62,7 @@ export const testDates = async (userId, interaction) => {
 	try {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
-		let { lastPointsGivenBy } = user;
+		let lastPointsGivenBy = user.lastPointsGivenBy
 
 		const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
 			const pointDate = new Date(date);
@@ -99,11 +92,6 @@ export const giveUserAPoint = async (userId, interaction) => {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
 
-		console.log(user)
-
-		// const { pointsReceived: Hello, lastPointsGivenBy: Goodbye } = user;
-		// console.log(Hello, Goodbye);
-
 		user.pointsReceived.push(newPoint);
 		user.lastPointsGivenBy.push(newPointGivenBy);
 		await db.updateOne({ _id: userId }, { $set: { lastPointsGivenBy: user.lastPointsGivenBy, pointsReceived: user.pointsReceived } });
@@ -114,13 +102,21 @@ export const giveUserAPoint = async (userId, interaction) => {
 };
 
 
-export const countGivenPoint = (userId, messageChannel) => {
-	// const { points } = db.data;
-	// const pointsReceived = points[userId].pointsReceived.filter(({ channel }) => channel === messageChannel);
-	// return pointsReceived.length;
+export const countGivenPoint = async (userId, messageChannel) => {
+	try {
+		const db = await connectDB();
+		const user = await db.findOne({ _id: userId });
+		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel);
+		console.log(score.length)
+		return score.length;
+	}
+	catch (error) {
+		console.log(error);
+	}
 };
 
 export const channelPoints = (channelName, nameAmount = 1) => {
+
 	// const { points } = db.data;
 	// const allUsers = Object.keys(points);
 	// const listOfPoints = allUsers.map(userID => {
