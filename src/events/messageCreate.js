@@ -49,7 +49,7 @@ export default {
 						helpCommand(interaction, client);
 						break;
 					default:
-						interaction.channel.send(`I didnt recognize the request "${command}"`);
+						return;
 				}
 			}
 			if (command.at(1) === "@" && command.includes(suffix)) {
