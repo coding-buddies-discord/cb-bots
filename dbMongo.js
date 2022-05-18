@@ -14,7 +14,6 @@ const connectDB = async () => {
 	}
 };
 
-
 class PointsUser {
 	constructor() {
 		this.pointsReceived = [],
@@ -63,6 +62,10 @@ export const testDates = async (userId, interaction) => {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
 		let lastPointsGivenBy = user?.lastPointsGivenBy;
+
+		if (!lastPointsGivenBy) {
+			return true;
+		}
 
 		const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
 			const pointDate = new Date(date);
