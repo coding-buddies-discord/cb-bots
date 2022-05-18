@@ -1,125 +1,144 @@
-import { LowSync, JSONFileSync } from "lowdb";
-import fs from "fs";
-// import set from "lodash";
+import { MongoClient } from "mongodb";
+
+const client = new MongoClient("mongodb://0.0.0.0:27017/");
+
+const connectDB = async () => {
+	try {
+		await client.connect();
+		const db = client.db("coding_buddies");
+		const buddies = db.collection("buddies");
+		return buddies;
+	}
+	catch (error) {
+		console.log(error);
+	}
+};
 
 class PointsUser {
 	constructor() {
 		this.pointsReceived = [],
-		this.pointsGiven = [],
-		this.lastPointsGivenBy = [];
+			this.pointsGiven = [],
+			this.lastPointsGivenBy = [];
 	}
 }
 
 class PointsObject {
 	constructor(giver, date, channel) {
 		this.givenBy = giver,
-		this.date = date,
-		this.channel = channel;
+			this.date = date,
+			this.channel = channel;
 	}
 }
 
 class PointGivenBy {
 	constructor(userId, date) {
 		this.userId = userId,
-		this.date = date;
+			this.date = date;
 	}
 }
 
-// eslint-disable-next-line no-shadow
-const createDbProps = (db) => {
-	const props = ["points", "example"];
-	for (const prop of props) {
-		const isInDB = prop in db.data;
-		if (!isInDB) {
-			db.data[prop] = {};
-		}
-	}
-	console.log("added necessary props to db.json");
-};
+export const addUserToPoints = async (userId) => {
 
-const checkDB = (path = "db.json") => {
-	console.log("checking...");
+	const newUser = {};
+	newUser._id = userId;
+	Object.assign(newUser, new PointsUser);
+
 	try {
-		const dbExists = fs.existsSync(path);
-
-		if (!dbExists) {
-			fs.appendFileSync("db.json", "{}");
-			console.log("db.json created");
+		const db = await connectDB();
+		const foundUser = await db.findOne({ "_id": userId });
+		if (foundUser) {
+			return;
 		}
-		if (fs.readFileSync(path).length === 0) {
-			fs.appendFileSync("db.json", "{}");
-			console.log("db.json was empty, added an empty object");
-		}
-		const database = new LowSync(new JSONFileSync("db.json"));
-		database.read();
-		createDbProps(database);
-		database.write();
+		await db.insertOne(newUser);
 	}
-	catch (err) {
-		console.error(err);
+	catch (error) {
+		console.log(error);
 	}
 };
 
-checkDB();
-
-
-const db = new LowSync(new JSONFileSync("db.json"));
-db.read();
-
-
-export const addUserToPoints = (userId) => {
-	// eslint-disable-next-line no-prototype-builtins
-	const { points } = db.data;
-	if (points.hasOwnProperty(userId)) return;
-
-	const newUserObject = {};
-	newUserObject[userId] = new PointsUser;
-	Object.assign(points, newUserObject);
-
-	db.write();
-};
-
-export const testDates = (userId, interaction) => {
+export const testDates = async (userId, interaction) => {
 	const currentDate = Date.now();
-	const { points } = db.data;
-	let { lastPointsGivenBy } = points[userId];
-	const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
-		const pointDate = new Date(date);
-		const dateComparison = currentDate - pointDate;
-		return dateComparison <	 (1000 * 60);
-	});
-	// eslint-disable-next-line no-shadow
-	const isValidPoint = newLastPointsGivenBy.every(({ userId }) => userId !== interaction.author.id);
-	lastPointsGivenBy = newLastPointsGivenBy;
-	db.write();
-	return isValidPoint;
+	try {
+		const db = await connectDB();
+		const user = await db.findOne({ _id: userId });
+		let lastPointsGivenBy = user?.lastPointsGivenBy;
+
+		if (!lastPointsGivenBy) {
+			return true;
+		}
+
+		const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
+			const pointDate = new Date(date);
+			const dateComparison = currentDate - pointDate;
+			return dateComparison < (1000 * 60);
+		});
+
+		// eslint-disable-next-line no-shadow
+		const isValidPoint = newLastPointsGivenBy.every(({ userId }) => userId !== interaction.author.id);
+		lastPointsGivenBy = newLastPointsGivenBy;
+
+		await db.updateOne({ _id: userId }, { $set: { lastPointsGivenBy: newLastPointsGivenBy } });
+		return isValidPoint;
+
+	}
+	catch (error) {
+		console.log(error);
+	}
 };
 
-export const giveUserAPoint = (userId, interaction) => {
-	const { points } = db.data;
+export const giveUserAPoint = async (userId, interaction) => {
+
 	const newPoint = new PointsObject(interaction.author.id, Date.now(), interaction.channelId);
 	const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
-	points[userId].pointsReceived.push(newPoint);
-	points[userId].lastPointsGivenBy.push(newPointGivenBy);
-	db.write();
+
+	try {
+		const db = await connectDB();
+		const user = await db.findOne({ _id: userId });
+
+		if (!user) {
+			addUserToPoints(userId);
+		}
+
+		user.pointsReceived.push(newPoint);
+		user.lastPointsGivenBy.push(newPointGivenBy);
+		await db.updateOne({ _id: userId }, { $set: { lastPointsGivenBy: user.lastPointsGivenBy, pointsReceived: user.pointsReceived } });
+	}
+	catch (error) {
+		console.log(error);
+	}
 };
 
 
-export const countGivenPoint = (userId, messageChannel) => {
-	const { points } = db.data;
-	const pointsReceived = points[userId].pointsReceived.filter(({ channel }) => channel === messageChannel);
-	return pointsReceived.length;
+export const countGivenPoint = async ({ _id }, messageChannel) => {
+	try {
+		const db = await connectDB();
+		const user = await db.findOne({ _id: _id });
+		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel);
+		return score.length;
+	}
+	catch (error) {
+		console.log(error);
+	}
 };
 
-export const channelPoints = (channelName, nameAmount = 1) => {
-	const { points } = db.data;
-	const allUsers = Object.keys(points);
-	const listOfPoints = allUsers.map(userID => {
-		// eslint-disable-next-line no-shadow
-		const points = countGivenPoint(userID, channelName);
-		return { userID, points };
-	});
-	const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
-	return sortedList.slice(0, nameAmount);
+export const channelPoints = async (channelName, nameAmount = 1) => {
+	try {
+		const db = await connectDB();
+		const allUsers = await db.find().toArray();
+
+		const listOfPoints = allUsers.map(user => {
+			const possiblePoints = user.pointsReceived.filter(({ channel }) => channel === channelName);
+			const userID = user._id;
+			const points = possiblePoints.length;
+			return { userID, points };
+		});
+
+		const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
+		return sortedList.slice(0, nameAmount);
+
+	}
+	catch (error) {
+		console.log(error);
+	}
 };
 
