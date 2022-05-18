@@ -96,14 +96,16 @@ export const giveUserAPoint = async (userId, interaction) => {
 
 	try {
 		const db = await connectDB();
-		const user = await db.findOne({ _id: userId });
+		let user = await db.findOne({ _id: userId });
 
 		if (!user) {
-			addUserToPoints(userId);
+			await addUserToPoints(userId);
 		}
 
-		user?.pointsReceived.push(newPoint);
-		user?.lastPointsGivenBy.push(newPointGivenBy);
+		user = await db.findOne({ _id: userId });
+
+		user.pointsReceived.push(newPoint);
+		user.lastPointsGivenBy.push(newPointGivenBy);
 		await db.updateOne({ _id: userId }, { $set: { lastPointsGivenBy: user.lastPointsGivenBy, pointsReceived: user.pointsReceived } });
 	}
 	catch (error) {
@@ -117,9 +119,7 @@ export const countGivenPoint = async (userId, messageChannel) => {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
 		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel).length;
-		console.log(score)
 		const scoreTotal = user.pointsReceived.length;
-		console.log(scoreTotal)
 		return { score, scoreTotal };
 	}
 	catch (error) {
