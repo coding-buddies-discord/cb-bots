@@ -109,7 +109,7 @@ export const giveUserAPoint = async (userId, interaction) => {
 };
 
 
-export const countGivenPoint = async ({_id}, messageChannel) => {
+export const countGivenPoint = async ({ _id }, messageChannel) => {
 	try {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: _id });
@@ -121,21 +121,21 @@ export const countGivenPoint = async ({_id}, messageChannel) => {
 	}
 };
 
-export const channelPoints = async(channelName, nameAmount = 1) => {
+export const channelPoints = async (channelName, nameAmount = 1) => {
 	try {
 		const db = await connectDB();
 		const allUsers = await db.find().toArray();
-		
+
 		const listOfPoints = allUsers.map(user => {
 			const possiblePoints = user.pointsReceived.filter(({ channel }) => channel === channelName);
-			const userID = user._id;;
-			const points = possiblePoints.length
-			return { userID, points }
-		})
-		
+			const userID = user._id;
+			const points = possiblePoints.length;
+			return { userID, points };
+		});
+
 		const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
 		return sortedList.slice(0, nameAmount);
-		
+
 	}
 	catch (error) {
 		console.log(error);
