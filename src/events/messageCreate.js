@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import config from "../../config.js";
 import client from "../index.js";
 import {
@@ -57,7 +56,6 @@ export default {
 					helpCommand(interaction, client);
 					break;
 				default:
-					//interaction.channel.send(`I didnt recognize the request "${command}"`);
 					return;
 			}
 		}

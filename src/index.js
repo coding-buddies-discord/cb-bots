@@ -4,9 +4,15 @@ import { Client, Intents } from "discord.js";
 import * as eventsObj from "./events/index.js";
 import dotenv from "dotenv";
 
+
+// dotenv.config({
+// 	path: "./.env.development",
+// });
+
 dotenv.config();
 
 const token = process.env.TOKEN;
+
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS] });
 

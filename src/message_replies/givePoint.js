@@ -12,7 +12,8 @@ async function givePoint(command, interaction) {
 
 	if (!mentionId) return interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
 
-	const { validUser } = await isUserValid(interaction, mentionId);
+	const { validUser, username } = await isUserValid(interaction, mentionId);
+
 
 	// TODO: this donesn't wonk
 	if (!validUser) {
@@ -30,19 +31,22 @@ async function givePoint(command, interaction) {
 		// try to add the user to the DB, if they are already there
 		// db function will reject this
 		addUserToPoints(mentionId);
-		const canAddPoint = testDates(mentionId, interaction);
+		const canAddPoint = await testDates(mentionId, interaction);
 		if (!canAddPoint) {
 			interaction.channel.send(
-				`Yo <@!${interaction.author.id}>, you have to wait **at least** a minute to give <@!${mentionId}> another point.😅`,
+				`Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${username}** another point.😅`,
 			);
 		}
 		if (canAddPoint) {
-			giveUserAPoint(mentionId, interaction);
-			const userPoints = countGivenPoint(mentionId, interaction.channelId);
-			const emojis = [ "🔥", "💯", "💃🏾", "💪🏾"];
+			await giveUserAPoint(mentionId, interaction);
+			const { score, scoreTotal } = await countGivenPoint(mentionId, interaction.channelId);
+
+			const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
 			const randomNumber = Math.floor(Math.random() * 3);
-			interaction.channel.send(
-				`Woo! <@!${mentionId}> has **${userPoints} points** ${emojis[randomNumber]}`,
+			interaction.reply(
+
+				`Woo! **${username}** has **${score} points** in <#${interaction.channelId}> and **${scoreTotal}** points in total. ${emojis[randomNumber]}`,
+
 			);
 		}
 	}
