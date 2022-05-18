@@ -62,7 +62,7 @@ export const testDates = async (userId, interaction) => {
 	try {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
-		let lastPointsGivenBy = user.lastPointsGivenBy
+		let lastPointsGivenBy = user?.lastPointsGivenBy;
 
 		const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
 			const pointDate = new Date(date);
@@ -92,6 +92,10 @@ export const giveUserAPoint = async (userId, interaction) => {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
 
+		if (!user) {
+			addUserToPoints(userId);
+		}
+
 		user.pointsReceived.push(newPoint);
 		user.lastPointsGivenBy.push(newPointGivenBy);
 		await db.updateOne({ _id: userId }, { $set: { lastPointsGivenBy: user.lastPointsGivenBy, pointsReceived: user.pointsReceived } });
@@ -107,7 +111,6 @@ export const countGivenPoint = async (userId, messageChannel) => {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
 		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel);
-		console.log(score.length)
 		return score.length;
 	}
 	catch (error) {

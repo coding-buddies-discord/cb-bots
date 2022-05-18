@@ -30,14 +30,14 @@ async function givePoint(command, interaction) {
 		// try to add the user to the DB, if they are already there
 		// db function will reject this
 		addUserToPoints(mentionId);
-		const canAddPoint = testDates(mentionId, interaction);
+		const canAddPoint = await testDates(mentionId, interaction);
 		if (!canAddPoint) {
 			interaction.channel.send(
 				`Yo <@!${interaction.author.id}>, you have to wait **at least** a minute to give <@!${mentionId}> another point.😅`,
 			);
 		}
 		if (canAddPoint) {
-			giveUserAPoint(mentionId, interaction);
+			await giveUserAPoint(mentionId, interaction);
 			const userPoints = await countGivenPoint(mentionId, interaction.channelId);
 			const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
 			const randomNumber = Math.floor(Math.random() * 3);
