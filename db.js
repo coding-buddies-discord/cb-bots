@@ -1,6 +1,9 @@
 import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
 
-const client = new MongoClient("mongodb://0.0.0.0:27017/");
+dotenv.config();
+
+const client = new MongoClient(process.env.MONGO_URI);
 
 const connectDB = async () => {
 	try {
@@ -99,8 +102,8 @@ export const giveUserAPoint = async (userId, interaction) => {
 			addUserToPoints(userId);
 		}
 
-		user.pointsReceived.push(newPoint);
-		user.lastPointsGivenBy.push(newPointGivenBy);
+		user?.pointsReceived.push(newPoint);
+		user?.lastPointsGivenBy.push(newPointGivenBy);
 		await db.updateOne({ _id: userId }, { $set: { lastPointsGivenBy: user.lastPointsGivenBy, pointsReceived: user.pointsReceived } });
 	}
 	catch (error) {
@@ -113,8 +116,11 @@ export const countGivenPoint = async (userId, messageChannel) => {
 	try {
 		const db = await connectDB();
 		const user = await db.findOne({ _id: userId });
-		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel);
-		return score.length;
+		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel).length;
+		console.log(score)
+		const scoreTotal = user.pointsReceived.length;
+		console.log(scoreTotal)
+		return { score, scoreTotal };
 	}
 	catch (error) {
 		console.log(error);

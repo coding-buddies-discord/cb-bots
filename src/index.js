@@ -4,10 +4,12 @@ import { Client, Intents } from "discord.js";
 import * as eventsObj from "./events/index.js";
 import dotenv from "dotenv";
 
-dotenv.config({
-	path: "./.env.development",
-});
 
+// dotenv.config({
+// 	path: "./.env.development",
+// });
+
+dotenv.config();
 
 const token = process.env.TOKEN;
 
