@@ -109,10 +109,10 @@ export const giveUserAPoint = async (userId, interaction) => {
 };
 
 
-export const countGivenPoint = async ({ _id }, messageChannel) => {
+export const countGivenPoint = async (userId, messageChannel) => {
 	try {
 		const db = await connectDB();
-		const user = await db.findOne({ _id: _id });
+		const user = await db.findOne({ _id: userId });
 		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel);
 		return score.length;
 	}
