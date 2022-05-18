@@ -1,4 +1,4 @@
-import { channelPoints } from "../../dbMongo.js";
+import { channelPoints } from "../../db.js";
 import { isUserValid } from "../utils/isUserValid.js";
 
 const reportChannelPoints = async (interaction) => {

@@ -2,7 +2,7 @@
 import config from "../../config.js";
 import client from "../index.js";
 import { sendPing, reportChannelPoints, givePoint, helpCommand } from "../message_replies/index.js";
-import { addUserToPoints } from "../../dbMongo.js";
+import { addUserToPoints } from "../../db.js";
 
 
 export default {

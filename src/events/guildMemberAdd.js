@@ -1,5 +1,5 @@
 // import { MessageEmbed } from "discord.js";
-import { addUserToPoints } from "../../dbMongo.js";
+import { addUserToPoints } from "../../db.js";
 
 
 export default {
