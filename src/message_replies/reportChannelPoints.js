@@ -1,12 +1,12 @@
-import { channelPoints } from "../../db.js";
+import { channelPoints } from "../../dbMongo.js";
 import { isUserValid } from "../utils/isUserValid.js";
 
 const reportChannelPoints = async (interaction) => {
 	const { channelId } = interaction;
-	const topPointEarners = channelPoints(channelId, 5);
+	const topPointEarners = await channelPoints(channelId, 5);
 
-	let currentChannelPoints = 0;
-	topPointEarners.forEach((obj) => currentChannelPoints += obj.points);
+	let currentChannelPoints = topPointEarners.length;
+
 
 	if (currentChannelPoints === 0) return interaction.reply("There are no points in this channel yet, you should give someone one.😏");
 

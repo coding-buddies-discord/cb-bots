@@ -109,10 +109,10 @@ export const giveUserAPoint = async (userId, interaction) => {
 };
 
 
-export const countGivenPoint = async (userId, messageChannel) => {
+export const countGivenPoint = async ({_id}, messageChannel) => {
 	try {
 		const db = await connectDB();
-		const user = await db.findOne({ _id: userId });
+		const user = await db.findOne({ _id: _id });
 		const score = user.pointsReceived.filter(({ channel }) => channel === messageChannel);
 		return score.length;
 	}
@@ -121,16 +121,24 @@ export const countGivenPoint = async (userId, messageChannel) => {
 	}
 };
 
-export const channelPoints = (channelName, nameAmount = 1) => {
-
-	// const { points } = db.data;
-	// const allUsers = Object.keys(points);
-	// const listOfPoints = allUsers.map(userID => {
-	// 	// eslint-disable-next-line no-shadow
-	// 	const points = countGivenPoint(userID, channelName);
-	// 	return { userID, points };
-	// });
-	// const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
-	// return sortedList.slice(0, nameAmount);
+export const channelPoints = async(channelName, nameAmount = 1) => {
+	try {
+		const db = await connectDB();
+		const allUsers = await db.find().toArray();
+		
+		const listOfPoints = allUsers.map(user => {
+			const possiblePoints = user.pointsReceived.filter(({ channel }) => channel === channelName);
+			const userID = user._id;;
+			const points = possiblePoints.length
+			return { userID, points }
+		})
+		
+		const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
+		return sortedList.slice(0, nameAmount);
+		
+	}
+	catch (error) {
+		console.log(error);
+	}
 };
 
