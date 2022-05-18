@@ -5,7 +5,7 @@ import {
 	giveUserAPoint,
 	countGivenPoint,
 	testDates,
-} from "../../db.js";
+} from "../../dbMongo.js";
 
 async function givePoint(command, interaction) {
 	const mentionId = getUserIdFromMention(command);
@@ -39,7 +39,7 @@ async function givePoint(command, interaction) {
 		if (canAddPoint) {
 			giveUserAPoint(mentionId, interaction);
 			const userPoints = countGivenPoint(mentionId, interaction.channelId);
-			const emojis = [ "🔥", "💯", "💃🏾", "💪🏾"];
+			const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
 			const randomNumber = Math.floor(Math.random() * 3);
 			interaction.channel.send(
 				`Woo! <@!${mentionId}> has **${userPoints} points** ${emojis[randomNumber]}`,
