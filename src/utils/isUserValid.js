@@ -5,6 +5,6 @@ export const isUserValid = async (interaction, userId) => {
 		return { username: user.user.username, validUser: true };
 	}
 	catch (err) {
-		return {username: "Unknown", validUser: false };
+		return { username: "Unknown", validUser: false };
 	}
 };
