@@ -14,7 +14,7 @@ const sendPing = (interaction, client) => {
 			text: "Pong!",
 			iconURL: client.user.avatarURL(),
 		});
-	interaction.channel.send({ embeds: [embed] });
+	interaction.reply({ embeds: [embed] });
 
 };
 
