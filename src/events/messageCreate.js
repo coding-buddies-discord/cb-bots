@@ -41,6 +41,8 @@ export default {
 			return;
 		}
 
+		console.log(prefixCommand)
+
 		if (prefixCommand) {
 			switch (prefixCommand.toLowerCase()) {
 				case "!ping":
@@ -55,6 +57,8 @@ export default {
 				case "!help":
 					helpCommand(interaction, client);
 					break;
+				case "!goodbot":
+					interaction.reply('☺️')
 				default:
 					return;
 			}
