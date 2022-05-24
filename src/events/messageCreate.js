@@ -55,6 +55,8 @@ export default {
 				case "!help":
 					helpCommand(interaction, client);
 					break;
+				case "!goodbot":
+					interaction.reply('☺️')
 				default:
 					return;
 			}
