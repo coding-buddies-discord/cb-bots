@@ -8,6 +8,16 @@ import {
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
 
+
+
+function matchSufix(str) {
+	const myExp = /<@!?\d+> ?\+{2}/g;
+	//it will always return an array, in case there's no match, the array will be empty
+	const matches = [...str.matchAll(myExp)];
+	//matches return an array with various details, from which we only need those in index 0;
+	return matches.map(match => match[0])
+}
+
 export default {
 	name: "messageCreate",
 	execute(interaction) {
@@ -26,18 +36,10 @@ export default {
 		const findPrefix = content.match(/^!\w+/);
 		// if there's a match, tries to grab the first value of the array or undefined;
 		const prefixCommand = findPrefix?.[0];
+		const findSufix = matchSufix(content);
+		
 
-		const commands = content.split(" ").filter((word) => {
-			if (word.length <= 5) {
-				return false;
-			} else if (word.indexOf(suffix) === word.length - 2) {
-				return true;
-			} else {
-				return false;
-			}
-		});
-
-		if (!commands.length && !prefixCommand) {
+		if (!findSufix.length && !prefixCommand) {
 			return;
 		}
 
@@ -56,14 +58,15 @@ export default {
 					helpCommand(interaction, client);
 					break;
 				case "!goodbot":
-					interaction.reply('☺️')
+					interaction.reply('☺️');
+					break
 				default:
 					return;
 			}
 		}
 
-		if (commands.length) {
-			commands.forEach((command) => {
+		if (findSufix.length) {
+			findSufix.forEach((command) => {
 				givePoint(command, interaction);
 			});
 		}

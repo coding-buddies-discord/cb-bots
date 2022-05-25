@@ -17,13 +17,13 @@ async function givePoint(command, interaction) {
 
 	// TODO: this donesn't wonk
 	if (!validUser) {
-		interaction.channel.send(
+		interaction.reply(
 			// eslint-disable-next-line no-useless-escape
 			`Sorry <@!${interaction.author.id}>, idk who ${command} is. ¯\\_(ツ)_/¯`,
 		);
 	}
 	else if (interaction.author.id === mentionId) {
-		interaction.channel.send(
+		interaction.reply(
 			`Lmao <@!${interaction.author.id}>, you can't give yourself a point.`,
 		);
 	}
@@ -33,7 +33,7 @@ async function givePoint(command, interaction) {
 		addUserToPoints(mentionId);
 		const canAddPoint = await testDates(mentionId, interaction);
 		if (!canAddPoint) {
-			interaction.channel.send(
+			interaction.reply(
 				`Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${username}** another point.😅`,
 			);
 		}
