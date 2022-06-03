@@ -1,4 +1,4 @@
-import config from "../../config.js";
+// import config from "../../config.js";
 import client from "../index.js";
 import {
 	sendPing,
@@ -9,13 +9,12 @@ import {
 import { addUserToPoints } from "../../db.js";
 
 
-
 function matchSufix(str) {
 	const myExp = /<@!?\d+> ?\+{2}/g;
-	//it will always return an array, in case there's no match, the array will be empty
+	// it will always return an array, in case there's no match, the array will be empty
 	const matches = [...str.matchAll(myExp)];
-	//matches return an array with various details, from which we only need those in index 0;
-	return matches.map(match => match[0])
+	// matches return an array with various details, from which we only need those in index 0;
+	return matches.map(match => match[0]);
 }
 
 export default {
@@ -29,7 +28,7 @@ export default {
 		addUserToPoints(interaction.author.id);
 
 		// Prefix and message content
-		const { suffix } = config;
+		// const { suffix } = config;
 		const { content } = interaction;
 
 		// finds prefix at the beggining
@@ -37,7 +36,7 @@ export default {
 		// if there's a match, tries to grab the first value of the array or undefined;
 		const prefixCommand = findPrefix?.[0];
 		const findSufix = matchSufix(content);
-		
+
 
 		if (!findSufix.length && !prefixCommand) {
 			return;
@@ -58,8 +57,8 @@ export default {
 					helpCommand(interaction, client);
 					break;
 				case "!goodbot":
-					interaction.reply('☺️');
-					break
+					interaction.reply("☺️");
+					break;
 				default:
 					return;
 			}
