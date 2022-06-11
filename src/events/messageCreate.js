@@ -29,9 +29,10 @@ export default {
 		// db function will reject this
 		const isNewUser = addUserToPoints(interaction.author.id);
 
-		if (isNewUser) {
-			sendBotIntro(interaction);
-		}
+		// NOTE: THIS IS COMPLETE
+		// if (isNewUser) {
+		// 	sendBotIntro(interaction);
+		// }
 
 		// Prefix and message content
 		// const { suffix } = config;
