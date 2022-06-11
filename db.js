@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { checkUserCache, addUserToCache } from './src/utils/userCache.js'
 
 dotenv.config();
 
@@ -47,12 +48,21 @@ export const addUserToPoints = async (userId) => {
 	Object.assign(newUser, new PointsUser);
 
 	try {
+		const inCache = checkUserCache(userId);
+
+		if (inCache) {
+			console.log('i was in cache');
+			return false;
+		}
 		const db = await connectDB();
 		const foundUser = await db.findOne({ "_id": userId });
+		console.log('i hit the db');
 		if (foundUser) {
 			return;
 		}
 		await db.insertOne(newUser);
+		addUserToCache(userId);
+		return true;
 	}
 	catch (error) {
 		console.log(error);

@@ -5,8 +5,10 @@ import {
 	reportChannelPoints,
 	givePoint,
 	helpCommand,
+	sendBotIntro,
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
+import { addUserToCache } from '../utils/userCache.js';
 
 
 function matchSufix(str) {
@@ -25,7 +27,11 @@ export default {
 
 		// try to add the user to the points DB, if they are already there
 		// db function will reject this
-		addUserToPoints(interaction.author.id);
+		const isNewUser = addUserToPoints(interaction.author.id);
+
+		if (isNewUser) {
+			sendBotIntro(interaction);
+		}
 
 		// Prefix and message content
 		// const { suffix } = config;
