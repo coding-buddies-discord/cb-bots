@@ -12,9 +12,7 @@ const checkUserCache = (user) => {
   if (userCache[user]) {
     return true;
   }
-  else {
-    return false;
-  }
+  return false;
 };
 
 export { addUserToCache, checkUserCache };
