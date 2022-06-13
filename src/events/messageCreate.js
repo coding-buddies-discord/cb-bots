@@ -8,7 +8,6 @@ import {
 	sendBotIntro,
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
-import { addUserToCache } from '../utils/userCache.js';
 
 
 async function matchSufix(str) {
