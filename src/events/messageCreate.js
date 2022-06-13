@@ -27,7 +27,7 @@ export default {
 
 		// try to add the user to the points DB, if they are already there
 		// db function will reject this
-		const isNewUser = addUserToPoints(interaction.author.id);
+		const isNewUser = await addUserToPoints(interaction.author.id);
 
 		// NOTE: THIS IS COMPLETE
 		// if (isNewUser) {
