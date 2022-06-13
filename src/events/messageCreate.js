@@ -11,7 +11,7 @@ import { addUserToPoints } from "../../db.js";
 import { addUserToCache } from '../utils/userCache.js';
 
 
-function matchSufix(str) {
+async function matchSufix(str) {
 	const myExp = /<@!?\d+> ?\+{2}/g;
 	// it will always return an array, in case there's no match, the array will be empty
 	const matches = [...str.matchAll(myExp)];
