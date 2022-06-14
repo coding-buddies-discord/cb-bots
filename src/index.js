@@ -3,11 +3,12 @@ import { Client, Intents } from "discord.js";
 // import db from '../db.js';
 import * as eventsObj from "./events/index.js";
 import dotenv from "dotenv";
+import { populateUserCache } from "../db.js"
 
 
-// dotenv.config({
-// 	path: "./.env.development",
-// });
+//creates the userCache, 
+//which is manteined due to the js system of import being a singleton. 
+const userCache = await populateUserCache();
 
 dotenv.config();
 

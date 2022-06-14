@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import { checkUserCache, addUserToCache } from './src/utils/userCache.js'
+import { checkUserCache, addUserToCache, userCache } from './src/utils/userCache.js'
 
 dotenv.config();
 
@@ -49,7 +49,7 @@ export const addUserToPoints = async (userId) => {
 
 	try {
 		const inCache = checkUserCache(userId);
-
+		
 		if (inCache) {
 			console.log('i was in cache');
 			return false;
@@ -61,7 +61,9 @@ export const addUserToPoints = async (userId) => {
 			return;
 		}
 		await db.insertOne(newUser);
-		addUserToCache(userId);
+		addUserToCache({id: userId});
+		
+		
 		return true;
 	}
 	catch (error) {
@@ -109,6 +111,7 @@ export const giveUserAPoint = async (userId, interaction) => {
 		let user = await db.findOne({ _id: userId });
 
 		if (!user) {
+			console.log('no user')
 			await addUserToPoints(userId);
 		}
 
@@ -157,4 +160,16 @@ export const channelPoints = async (channelName, nameAmount = 1) => {
 		console.log(error);
 	}
 };
+
+export const populateUserCache = async (cache =  userCache) => {
+	try {
+		const db = await connectDB();
+		const allUsers = await db.distinct('_id');
+		allUsers.forEach(userID => addUserToCache({id: userID}));
+		return cache;
+
+	} catch (error) {
+		console.log(error)
+	}
+}
 

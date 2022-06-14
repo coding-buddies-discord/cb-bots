@@ -15,4 +15,5 @@ const checkUserCache = (user) => {
   return false;
 };
 
-export { addUserToCache, checkUserCache };
+
+export { addUserToCache, checkUserCache, userCache };
