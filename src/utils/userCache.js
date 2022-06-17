@@ -1,19 +1,8 @@
 const userCache = {};
 
-const addUserToCache = (user) => {
-  const id = user.id;
-  if (userCache[id]) {
-    return;
-  }
-  userCache[id] = id;
-};
+const addUserToCache = (id) => userCache[id] = id;
 
-const checkUserCache = (user) => {
-  if (userCache[user]) {
-    return true;
-  }
-  return false;
-};
+const checkUserCache = (user) => user in userCache;
 
 
 export { addUserToCache, checkUserCache, userCache };

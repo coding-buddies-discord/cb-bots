@@ -61,7 +61,7 @@ export const addUserToPoints = async (userId) => {
 			return;
 		}
 		await db.insertOne(newUser);
-		addUserToCache({id: userId});
+		addUserToCache(userId);
 		
 		
 		return true;
@@ -165,7 +165,7 @@ export const populateUserCache = async (cache =  userCache) => {
 	try {
 		const db = await connectDB();
 		const allUsers = await db.distinct('_id');
-		allUsers.forEach(userID => addUserToCache({id: userID}));
+		allUsers.forEach(userID => addUserToCache(userID));
 		return cache;
 
 	} catch (error) {
