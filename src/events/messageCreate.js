@@ -20,10 +20,6 @@ function matchSufix(str) {
 export default {
 	name: "messageCreate",
 	async execute(interaction) {
-		// In case someone needs to see the mesage received
-		// console.log('########################')
-		// console.log(interaction.content)
-
 		// Avoid an iteration
 		if (interaction.author.bot) return;
 
@@ -36,7 +32,6 @@ export default {
 		// }
 
 		// Prefix and message content
-		// const { suffix } = config;
 		const { content } = interaction;
 
 		// finds prefix at the beggining
@@ -72,8 +67,10 @@ export default {
 		}
 
 		if (findSufix.length) {
+			const isNoisy = /--n$/.test(content);
+
 			const userPointsArr = [...new Set(findSufix)]
-				.forEach((command) => givePoint(command, interaction));
+				.forEach((command) => givePoint(command, interaction, isNoisy));
 		}
 	},
 };

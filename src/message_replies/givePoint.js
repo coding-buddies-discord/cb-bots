@@ -7,47 +7,64 @@ import {
 	testDates,
 } from "../../db.js";
 
-async function givePoint(command, interaction) {
+async function givePoint(command, interaction, isNoisy) {
 	const mentionId = getUserIdFromMention(command);
+	const caller = interaction.author.id;
 
-	if (!mentionId) return interaction.reply(`Sorry <@!${interaction.author.id}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`);
+	if (!mentionId)
+		return interaction.reply(
+			`Sorry <@!${caller}>, can't find ${command}.\n(╯°□°）╯︵ ┻━┻`
+		);
 
 	const { validUser, username } = await isUserValid(interaction, mentionId);
-
 
 	// TODO: this donesn't wonk
 	if (!validUser) {
 		interaction.reply(
 			// eslint-disable-next-line no-useless-escape
-			`Sorry <@!${interaction.author.id}>, idk who ${command} is. ¯\\_(ツ)_/¯`,
+			`Sorry <@!${caller}>, idk who ${command} is. ¯\\_(ツ)_/¯`
 		);
-	}
-	else if (interaction.author.id === mentionId) {
+	} else if (caller === mentionId) {
 		interaction.reply(
-			`Lmao <@!${interaction.author.id}>, you can't give yourself a point.`,
+			`Lmao <@!${caller}>, you can't give yourself a point.`
 		);
-	}
-	else {
+	} else {
 		// try to add the user to the DB, if they are already there
 		// db function will reject this
 		addUserToPoints(mentionId);
+
 		const canAddPoint = await testDates(mentionId, interaction);
 		if (!canAddPoint) {
 			interaction.reply(
-				`Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${username}** another point.😅`,
+				`Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${username}** another point.😅`
 			);
 		}
 		if (canAddPoint) {
 			await giveUserAPoint(mentionId, interaction);
-			const { score, scoreTotal } = await countGivenPoint(mentionId, interaction.channelId);
-
 			const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
 			const randomNumber = Math.floor(Math.random() * 3);
-			interaction.reply(
 
-				`Woo! **${username}** has **${score} points** in <#${interaction.channelId}> and **${scoreTotal}** points in total. ${emojis[randomNumber]}`,
+			if (!isNoisy) {
+				try {
+					//const stonks = message.guild.emojis.cache.find(emoji => emoji.name === 'stonks');
+					// await interaction.react(stonks); //those two lines will work only in codding buddies
+					await interaction.react("🤖");
+					await interaction.react("👍");
+					await interaction.react(emojis[randomNumber]);
+				} catch (err) {
+					console.error(err);
+				}
+			}
 
-			);
+			if (isNoisy) {
+				const { score, scoreTotal } = await countGivenPoint(
+					mentionId,
+					interaction.channelId
+				);
+				interaction.reply(
+					`Woo! **${username}** has **${score} points** in <#${interaction.channelId}> and **${scoreTotal}** points in total. ${emojis[randomNumber]}`
+				);
+			}
 		}
 	}
 }
