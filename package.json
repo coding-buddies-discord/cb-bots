@@ -31,7 +31,8 @@
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "lowdb": "^3.0.0",
-    "mongodb": "^4.6.0"
+    "mongodb": "^4.6.0",
+    "puppeteer": "^15.3.0"
   },
   "devDependencies": {
     "eslint": "^8.8.0",
