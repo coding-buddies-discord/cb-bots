@@ -108,9 +108,8 @@ export const giveUserAPoint = async (userId, interaction) => {
 
 		if (!user) {
 			await addUserToPoints(userId);
+			user = await db.findOne({ _id: userId });
 		}
-
-		user = await db.findOne({ _id: userId });
 
 		user.pointsReceived.push(newPoint);
 		user.lastPointsGivenBy.push(newPointGivenBy);

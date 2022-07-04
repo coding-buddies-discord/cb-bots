@@ -1,7 +1,10 @@
 import { channelPoints } from "../../db.js";
 import { isUserValid } from "../utils/isUserValid.js";
-import { imgFromHtmlGenerator, generateBody } from "../image_templates/imgFromHtmlGenerator.js";
-import { leaderBoardBody, styles } from "../image_templates/points.js"
+import {
+	imgFromHtmlGenerator,
+	generateBody,
+} from "../image_templates/imgFromHtmlGenerator.js";
+import { leaderBoardBody, styles } from "../image_templates/points.js";
 
 const reportChannelPoints = async (interaction) => {
 	const { channelId } = interaction;
@@ -30,11 +33,8 @@ const reportChannelPoints = async (interaction) => {
 	const userListHTML = leaderBoardBody(channelName, caller, arrOfValidUsers);
 	const body = generateBody(userListHTML, styles);
 
-	const img = await imgFromHtmlGenerator(body)
-	interaction.reply({
-
-	 	files: [{ attachment: img }],
-	 });
+	const img = await imgFromHtmlGenerator(body);
+	interaction.reply({ files: [{ attachment: img }] });
 };
 
 export default reportChannelPoints;

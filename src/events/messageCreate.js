@@ -9,13 +9,12 @@ import {
 import { addUserToPoints } from "../../db.js";
 import { userCache } from "../utils/userCache.js";
 
-
 function matchSufix(str) {
 	const myExp = /<@!?\d+> ?\+{2}/g;
 	// it will always return an array, in case there's no match, the array will be empty
 	const matches = [...str.matchAll(myExp)];
 	// matches return an array with various details, from which we only need those in index 0;
-	return matches.map(match => match[0]);
+	return matches.map((match) => match[0]);
 }
 
 export default {
@@ -46,11 +45,9 @@ export default {
 		const prefixCommand = findPrefix?.[0];
 		const findSufix = matchSufix(content);
 
-
 		if (!findSufix.length && !prefixCommand) {
 			return;
 		}
-
 
 		if (prefixCommand) {
 			switch (prefixCommand.toLowerCase()) {
@@ -75,9 +72,8 @@ export default {
 		}
 
 		if (findSufix.length) {
-			findSufix.forEach((command) => {
-				givePoint(command, interaction);
-			});
+			const userPointsArr = [...new Set(findSufix)]
+				.forEach((command) => givePoint(command, interaction));
 		}
 	},
 };
