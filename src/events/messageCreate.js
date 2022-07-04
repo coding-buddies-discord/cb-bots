@@ -5,10 +5,9 @@ import {
 	reportChannelPoints,
 	givePoint,
 	helpCommand,
-	sendBotIntro,
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
-import { userCache } from "../utils/userCache.js"
+import { userCache } from "../utils/userCache.js";
 
 
 function matchSufix(str) {
