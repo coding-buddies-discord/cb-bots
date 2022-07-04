@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { checkUserCache, addUserToCache, userCache } from "./src/utils/userCache.js";
 
 dotenv.config();
 
@@ -20,23 +21,23 @@ const connectDB = async () => {
 class PointsUser {
 	constructor() {
 		this.pointsReceived = [],
-			this.pointsGiven = [],
-			this.lastPointsGivenBy = [];
+		this.pointsGiven = [],
+		this.lastPointsGivenBy = [];
 	}
 }
 
 class PointsObject {
 	constructor(giver, date, channel) {
 		this.givenBy = giver,
-			this.date = date,
-			this.channel = channel;
+		this.date = date,
+		this.channel = channel;
 	}
 }
 
 class PointGivenBy {
 	constructor(userId, date) {
 		this.userId = userId,
-			this.date = date;
+		this.date = date;
 	}
 }
 
@@ -47,12 +48,19 @@ export const addUserToPoints = async (userId) => {
 	Object.assign(newUser, new PointsUser);
 
 	try {
+		const inCache = checkUserCache(userId);
+
+		if (inCache) {
+			return false;
+		}
 		const db = await connectDB();
 		const foundUser = await db.findOne({ "_id": userId });
 		if (foundUser) {
 			return;
 		}
 		await db.insertOne(newUser);
+		addUserToCache(userId);
+		return true;
 	}
 	catch (error) {
 		console.log(error);
@@ -142,6 +150,18 @@ export const channelPoints = async (channelName, nameAmount = 1) => {
 		const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
 		return sortedList.slice(0, nameAmount);
 
+	}
+	catch (error) {
+		console.log(error);
+	}
+};
+
+export const populateUserCache = async (cache = userCache) => {
+	try {
+		const db = await connectDB();
+		const allUsers = await db.distinct("_id");
+		allUsers.forEach(userID => addUserToCache(userID));
+		return cache;
 	}
 	catch (error) {
 		console.log(error);

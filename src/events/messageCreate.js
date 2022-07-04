@@ -7,6 +7,7 @@ import {
 	helpCommand,
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
+import { userCache } from "../utils/userCache.js";
 
 
 function matchSufix(str) {
@@ -19,13 +20,21 @@ function matchSufix(str) {
 
 export default {
 	name: "messageCreate",
-	execute(interaction) {
+	async execute(interaction) {
+		// In case someone needs to see the mesage received
+		// console.log('########################')
+		// console.log(interaction.content)
+
 		// Avoid an iteration
 		if (interaction.author.bot) return;
 
 		// try to add the user to the points DB, if they are already there
 		// db function will reject this
-		addUserToPoints(interaction.author.id);
+		const isNewUser = await addUserToPoints(interaction.author.id);
+		// NOTE: THIS IS COMPLETE
+		// if (isNewUser) {
+		// 	sendBotIntro(interaction);
+		// }
 
 		// Prefix and message content
 		// const { suffix } = config;
@@ -42,7 +51,6 @@ export default {
 			return;
 		}
 
-		console.log(prefixCommand)
 
 		if (prefixCommand) {
 			switch (prefixCommand.toLowerCase()) {
