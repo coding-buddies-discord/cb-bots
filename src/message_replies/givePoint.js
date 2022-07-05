@@ -46,10 +46,11 @@ async function givePoint(command, interaction, isNoisy) {
 
 			if (!isNoisy) {
 				try {
-					//const stonks = message.guild.emojis.cache.find(emoji => emoji.name === 'stonks');
-					// await interaction.react(stonks); //those two lines will work only in codding buddies
+					const stonks = interaction.guild.emojis.cache.find(
+						(emoji) => emoji.name === "stonks"
+					);
 					await interaction.react("🤖");
-					await interaction.react("👍");
+					await interaction.react(stonks || "👍");
 					await interaction.react(emojis[randomNumber]);
 				} catch (err) {
 					console.error(err);

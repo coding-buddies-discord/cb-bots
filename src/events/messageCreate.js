@@ -69,8 +69,9 @@ export default {
 		if (findSufix.length) {
 			const isNoisy = /--n$/.test(content);
 
-			const userPointsArr = [...new Set(findSufix)]
-				.forEach((command) => givePoint(command, interaction, isNoisy));
+			[...new Set(findSufix)].forEach((command) =>
+				givePoint(command, interaction, isNoisy)
+			);
 		}
 	},
 };
