@@ -7,7 +7,7 @@ import {
 	testDates,
 } from "../../db.js";
 
-async function givePoint(command, interaction, isNoisy) {
+async function givePoint(command, interaction, isMessage) {
 	const mentionId = getUserIdFromMention(command);
 	const caller = interaction.author.id;
 
@@ -18,7 +18,8 @@ async function givePoint(command, interaction, isNoisy) {
 
 	const { validUser, username } = await isUserValid(interaction, mentionId);
 
-	// TODO: this donesn't wonk
+	// <@123456789012345678> will be an id but not a valid one,
+	// therefore will need to be checked, and will need this message;
 	if (!validUser) {
 		interaction.reply(
 			// eslint-disable-next-line no-useless-escape
@@ -41,23 +42,22 @@ async function givePoint(command, interaction, isNoisy) {
 		}
 		if (canAddPoint) {
 			await giveUserAPoint(mentionId, interaction);
-			const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
-			const randomNumber = Math.floor(Math.random() * 3);
 
-			if (!isNoisy) {
+			if (!isMessage) {
 				try {
 					const stonks = interaction.guild.emojis.cache.find(
 						(emoji) => emoji.name === "stonks"
 					);
 					await interaction.react("🤖");
-					await interaction.react(stonks || "👍");
-					await interaction.react(emojis[randomNumber]);
+					await interaction.react(stonks || "🔥");
 				} catch (err) {
 					console.error(err);
 				}
 			}
 
-			if (isNoisy) {
+			if (isMessage) {
+				const emojis = ["🔥", "💯", "💃🏾", "💪🏾"];
+				const randomNumber = Math.floor(Math.random() * 3);
 				const { score, scoreTotal } = await countGivenPoint(
 					mentionId,
 					interaction.channelId

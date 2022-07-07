@@ -67,10 +67,10 @@ export default {
 		}
 
 		if (findSufix.length) {
-			const isNoisy = /--n$/.test(content);
+			const isMessage = /--m$/.test(content);
 
-			[...new Set(findSufix)].forEach((command) =>
-				givePoint(command, interaction, isNoisy)
+			new Set(findSufix).forEach((command) =>
+				givePoint(command, interaction, isMessage)
 			);
 		}
 	},
