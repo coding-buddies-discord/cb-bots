@@ -6,4 +6,4 @@ const findFlagAndValue = (str) => {
 	return { flag, value }
 }
 
-export { findFlag, findValue, findFlagAndValue }
+export { findFlagAndValue }
