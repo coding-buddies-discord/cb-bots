@@ -1,13 +1,9 @@
-const findFlag = (str) => {
-	const myExp = /--\w+/;
+const findFlagAndValue = (str) => {
+	const myExp = /(--\w+\s?)(.+)*/;
 	const found = str.match(myExp);
-	return found?.[0]
+	const flag = found?.[1]?.trim();
+	const value = found?.[2]?.trim();
+	return { flag, value }
 }
 
-const findValue = (command, str) => {
-	const myExp = new RegExp(`${command}=['"]\\s*(.+?)\\s*?['"]`); 
-	const found = str.match(myExp);
-	return found?.[1]
-}
-
-export { findFlag, findValue }
+export { findFlag, findValue, findFlagAndValue }
