@@ -5,6 +5,7 @@ import {
 	reportChannelPoints,
 	givePoint,
 	helpCommand,
+	timezone,
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
 import { userCache } from "../utils/userCache.js";
@@ -61,6 +62,8 @@ export default {
 				case "!goodbot":
 					interaction.reply("☺️");
 					break;
+				case "!timezone":
+					return timezone(interaction)
 				default:
 					return;
 			}
