@@ -5,26 +5,22 @@ import {
 	reportChannelPoints,
 	givePoint,
 	helpCommand,
+	timezone,
 } from "../message_replies/index.js";
 import { addUserToPoints } from "../../db.js";
 import { userCache } from "../utils/userCache.js";
-
 
 function matchSufix(str) {
 	const myExp = /<@!?\d+> ?\+{2}/g;
 	// it will always return an array, in case there's no match, the array will be empty
 	const matches = [...str.matchAll(myExp)];
 	// matches return an array with various details, from which we only need those in index 0;
-	return matches.map(match => match[0]);
+	return matches.map((match) => match[0]);
 }
 
 export default {
 	name: "messageCreate",
 	async execute(interaction) {
-		// In case someone needs to see the mesage received
-		// console.log('########################')
-		// console.log(interaction.content)
-
 		// Avoid an iteration
 		if (interaction.author.bot) return;
 
@@ -37,7 +33,6 @@ export default {
 		// }
 
 		// Prefix and message content
-		// const { suffix } = config;
 		const { content } = interaction;
 
 		// finds prefix at the beggining
@@ -46,11 +41,9 @@ export default {
 		const prefixCommand = findPrefix?.[0];
 		const findSufix = matchSufix(content);
 
-
 		if (!findSufix.length && !prefixCommand) {
 			return;
 		}
-
 
 		if (prefixCommand) {
 			switch (prefixCommand.toLowerCase()) {
@@ -69,15 +62,19 @@ export default {
 				case "!goodbot":
 					interaction.reply("☺️");
 					break;
+				case "!timezone":
+					return timezone(interaction)
 				default:
 					return;
 			}
 		}
 
 		if (findSufix.length) {
-			findSufix.forEach((command) => {
-				givePoint(command, interaction);
-			});
+			const isMessage = /--m$/.test(content);
+
+			new Set(findSufix).forEach((command) =>
+				givePoint(command, interaction, isMessage)
+			);
 		}
 	},
 };
