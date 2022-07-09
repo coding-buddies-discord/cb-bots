@@ -15,7 +15,13 @@ const generateBody = (body, styles) => {
   `;
 };
 
-const browser = await puppeteer.launch();
+const browser = await puppeteer.launch({
+  headless: true,
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+  ],
+});
 
 const imgFromHtmlGenerator = async (html = "") => {
   const page = await browser.newPage();
