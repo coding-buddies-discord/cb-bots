@@ -40,8 +40,14 @@ const subOrUpdateToTimezone = async (value, interaction, flag) => {
 		const timezone = m.values[0];
 		const subOrUp =
 			flag === "--sub" ? "subscribed to" : "updated your info on";
-		await insertTimezone(author, timezone);
-		interaction.reply(`You've now ${subOrUp} the \`!timezone\` command!`);
+		try {
+			await insertTimezone(author, timezone);
+			interaction.reply(
+				`You've now ${subOrUp} the \`!timezone\` command!`
+			);
+		} catch (err) {
+			console.log(err);
+		}
 	});
 
 	collector.on("end", async (collected) => {
