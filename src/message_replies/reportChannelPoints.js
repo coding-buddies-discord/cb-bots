@@ -10,12 +10,6 @@ const reportChannelPoints = async (interaction) => {
 	const { channelId } = interaction;
 	const topPointEarners = await channelPoints(channelId, 8);
 
-	if (topPointEarners.length === 0) {
-		return interaction.reply(
-			"There are no points in this channel yet, you should give someone one.😏"
-		);
-	}
-
 	const arrOfValidUsers = [];
 	for (const { userID, points } of topPointEarners) {
 		if (points === 0) continue;
@@ -27,6 +21,13 @@ const reportChannelPoints = async (interaction) => {
 			arrOfValidUsers.push({ username, points, user });
 		}
 	}
+
+	if (arrOfValidUsers.length === 0) {
+		return interaction.reply(
+			"There are no points in this channel yet, you should give someone one.😏"
+		);
+	}
+
 
 	const caller = interaction.author.username;
 	const channelName = interaction.channel.name;
