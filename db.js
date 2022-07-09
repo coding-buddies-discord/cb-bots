@@ -18,6 +18,14 @@ const connectDB = async () => {
 	}
 };
 
+class User {
+	constructor(id) {
+		this._id = id,
+		this.timezone = null
+	}
+}
+
+
 class PointsUser {
 	constructor() {
 		this.pointsReceived = [],
@@ -108,9 +116,8 @@ export const giveUserAPoint = async (userId, interaction) => {
 
 		if (!user) {
 			await addUserToPoints(userId);
+			user = await db.findOne({ _id: userId });
 		}
-
-		user = await db.findOne({ _id: userId });
 
 		user.pointsReceived.push(newPoint);
 		user.lastPointsGivenBy.push(newPointGivenBy);
@@ -168,3 +175,27 @@ export const populateUserCache = async (cache = userCache) => {
 	}
 };
 
+
+
+export const insertTimezone = async ( _id, timezone = null , dbConnection = connectDB) => {
+	try {
+		const db = await dbConnection();
+		await db.updateOne({_id}, {$set: {timezone}})
+	}
+	catch (error) {
+		console.log(error);
+	}
+};
+
+
+export const findTimezone = async ( id, dbConnection = connectDB) => {
+	try {
+		const db = await dbConnection();
+		const user = await db.findOne({ _id: id });
+		const timezone = user?.timezone
+		return { timezone }
+	}
+	catch (error) {
+		console.log(error);
+	}
+};
