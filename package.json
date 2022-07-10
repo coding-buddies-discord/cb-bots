@@ -30,6 +30,7 @@
     "discord-api-types": "^0.26.1",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
+    "html-entities": "^2.3.3",
     "luxon": "^2.4.0",
     "mongodb": "^4.6.0",
     "puppeteer": "^15.3.0"
