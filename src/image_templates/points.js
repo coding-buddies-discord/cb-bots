@@ -27,7 +27,7 @@ const leaderBoardBody = (channelName, caller, usersArr, listOfUsers = listOfUser
 	const usersList = listOfUsers(caller, usersArr);
 	return `
 <h1>LEADERBOARD</h1>
-<span class="channel-name">#${channelName}</span>
+<span class="channel-name">#${encode(channelName)}</span>
 <div class="userInfo" style="background-color: #0F6284;">
   <span class="user-avatar">Avatar</span>
   <span class="place">Place</span>
