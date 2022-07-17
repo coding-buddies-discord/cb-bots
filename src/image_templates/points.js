@@ -1,3 +1,5 @@
+import { encode } from 'html-entities';
+
 const listOfUserPoints = (caller, arr) => {
 	return arr.map((user,index) => {
 		
@@ -13,7 +15,7 @@ const listOfUserPoints = (caller, arr) => {
 <div class="userInfo ${isCaller}">
   <img src="${imgSrc}" class="user-avatar" >
   <span class="place">#${index + 1}</span>
-   <span class="name">${username}</span>
+  <span class="name">${encode(username)}</span>
   <span class="points">${points}</span>
  </div>
  `
@@ -25,7 +27,7 @@ const leaderBoardBody = (channelName, caller, usersArr, listOfUsers = listOfUser
 	const usersList = listOfUsers(caller, usersArr);
 	return `
 <h1>LEADERBOARD</h1>
-<span class="channel-name">#${channelName}</span>
+<span class="channel-name">#${encode(channelName)}</span>
 <div class="userInfo" style="background-color: #0F6284;">
   <span class="user-avatar">Avatar</span>
   <span class="place">Place</span>
