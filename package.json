@@ -9,12 +9,11 @@
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
-    "prettier-format": "",
     "lint": "eslint src",
     "lint-staged": {
       "*.js": [
-        "eslint src --fix",
-        "prettier --config .prettierrc 'src/**/*.js' --write"
+        "eslint src",
+        "prettier --config .prettierrc --write"
       ]
     },
     "prepare": "husky install"
