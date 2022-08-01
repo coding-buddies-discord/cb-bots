@@ -1,31 +1,35 @@
 import { encode } from 'html-entities';
 
 const listOfUserPoints = (caller, arr) => {
-	return arr.map((user,index) => {
-		
-		const { username, points } = user;
-		const { id, avatar } = user.user
-		const defaultPic = "https://cdn.discordapp.com/embed/avatars/0.png";
-		const src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.webp`;
-		const imgSrc = !avatar ? defaultPic : src;
-		const isCaller = caller === username ? "pointUser" : "";
+  return arr
+    .map((user, index) => {
+      const { username, points } = user;
+      const { id, avatar } = user.user;
+      const defaultPic = 'https://cdn.discordapp.com/embed/avatars/0.png';
+      const src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.webp`;
+      const imgSrc = !avatar ? defaultPic : src;
+      const isCaller = caller === username ? 'pointUser' : '';
 
-
-		return `
+      return `
 <div class="userInfo ${isCaller}">
   <img src="${imgSrc}" class="user-avatar" >
   <span class="place">#${index + 1}</span>
   <span class="name">${encode(username)}</span>
   <span class="points">${points}</span>
  </div>
- `
-}).join('');
-}
+ `;
+    })
+    .join('');
+};
 
-
-const leaderBoardBody = (channelName, caller, usersArr, listOfUsers = listOfUserPoints) => {
-	const usersList = listOfUsers(caller, usersArr);
-	return `
+const leaderBoardBody = (
+  channelName,
+  caller,
+  usersArr,
+  listOfUsers = listOfUserPoints
+) => {
+  const usersList = listOfUsers(caller, usersArr);
+  return `
 <h1>LEADERBOARD</h1>
 <span class="channel-name">#${encode(channelName)}</span>
 <div class="userInfo" style="background-color: #0F6284;">
@@ -35,9 +39,8 @@ const leaderBoardBody = (channelName, caller, usersArr, listOfUsers = listOfUser
   <span class="points">Points</span>
  </div>
 ${usersList}
-`
-}
-
+`;
+};
 
 const styles = `
 * {
@@ -116,6 +119,6 @@ h1 {
   color: inherit;
 }
 
-`
+`;
 
-export { leaderBoardBody, styles }
+export { leaderBoardBody, styles };
