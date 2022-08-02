@@ -9,13 +9,6 @@
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
-    "lint": "eslint src",
-    "lint-staged": {
-      "*.js": [
-        "eslint src",
-        "prettier --config .prettierrc --write"
-      ]
-    },
     "prepare": "husky install"
   },
   "repository": {
@@ -54,6 +47,12 @@
   "nodemonConfig": {
     "ignore": [
       "db.json"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint src",
+      "prettier --config .prettierrc 'src/**/*.js' --write"
     ]
   }
 }

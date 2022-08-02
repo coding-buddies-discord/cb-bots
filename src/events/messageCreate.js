@@ -8,7 +8,6 @@ import {
   timezone,
 } from '../message_replies/index.js';
 import { addUserToPoints } from '../../db.js';
-import { userCache } from '../utils/userCache.js';
 
 function matchSufix(str) {
   const myExp = /<@!?\d+> ?\+{2}/g;
@@ -26,10 +25,10 @@ export default {
 
     // try to add the user to the points DB, if they are already there
     // db function will reject this
-    const isNewUser = await addUserToPoints(interaction.author.id);
+    await addUserToPoints(interaction.author.id);
     // NOTE: THIS IS COMPLETE
     // if (isNewUser) {
-    // 	sendBotIntro(interaction);
+    //  sendBotIntro(interaction);
     // }
 
     // Prefix and message content

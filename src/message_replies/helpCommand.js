@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import commandsList from '../../models/commandsList.js';
 
-const helpCommand = (interaction, client) => {
+const helpCommand = (interaction) => {
   function outputCommands() {
     const newArray = [];
     for (let i = 0; i < commandsList.length; i++) {

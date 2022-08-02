@@ -4,7 +4,8 @@ import * as eventsObj from './events/index.js';
 import dotenv from 'dotenv';
 import { populateUserCache } from '../db.js';
 
-const userCache = await populateUserCache();
+// eslint-disable-next-line no-unused-vars
+const userCache = (async () => await populateUserCache())();
 
 const { NODE_ENV } = process.env;
 

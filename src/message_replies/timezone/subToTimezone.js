@@ -45,7 +45,7 @@ const subOrUpdateToTimezone = async (value, interaction, flag) => {
     }
   });
 
-  collector.on('end', async (collected) => {
+  collector.on('end', async () => {
     try {
       await reply.delete();
     } catch (err) {
