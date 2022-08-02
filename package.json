@@ -4,8 +4,9 @@
   "description": "A bot to help encourage Coding Buddies",
   "exports": "./index.js",
   "node": ">=16.0.0",
+  "type": "module",
   "scripts": {
-    "test": "test",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
@@ -38,6 +39,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
+    "jest": "^28.1.3",
     "lint-staged": "^13.0.3",
     "nodemon": "^2.0.15",
     "prettier": "^2.7.1",

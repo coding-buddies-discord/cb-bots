@@ -8,6 +8,7 @@
     "sourceType": "module"
   },
   "plugins": ["prettier"],
+  "ignorePatterns": ["**/*.test.js"],
   "rules": {
     "handle-callback-err": "off",
     "max-nested-callbacks": ["error", { "max": 4 }],
