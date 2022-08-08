@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer';
 
 const generateBody = (body, styles) => {
   return `
@@ -15,19 +15,16 @@ const generateBody = (body, styles) => {
   `;
 };
 
-const browser = await puppeteer.launch({
-  headless: true,
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-  ],
-});
+const imgFromHtmlGenerator = async (html = '') => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
 
-const imgFromHtmlGenerator = async (html = "") => {
   const page = await browser.newPage();
   await page.setContent(html);
 
-  const content = await page.$("body");
+  const content = await page.$('body');
   const imageBuffer = await content.screenshot({ omitBackground: true });
 
   await page.close();
