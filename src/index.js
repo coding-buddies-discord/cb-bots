@@ -3,6 +3,7 @@ import { Client, Intents } from 'discord.js';
 import * as eventsObj from './events/index.js';
 import dotenv from 'dotenv';
 import { populateUserCache } from '../db.js';
+import lecronJames from './events/leCronJames.js';
 
 // eslint-disable-next-line no-unused-vars
 const userCache = (async () => await populateUserCache())();
@@ -38,4 +39,9 @@ events.forEach((event) => {
 
 // Login to Discord with your client's token
 client.login(token);
+
+client.once('ready', () => {
+  lecronJames(client);
+});
+
 export default client;
