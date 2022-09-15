@@ -1,3 +1,5 @@
+import lecronJames from './leCronJames.js';
+
 export default {
   name: 'ready',
   once: true,
@@ -9,5 +11,7 @@ export default {
       status: 'online',
       activities: [{ name: 'The buddies bot 🤖', type: 'PLAYING' }],
     });
+
+    lecronJames(client);
   },
 };

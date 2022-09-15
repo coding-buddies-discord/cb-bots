@@ -31,6 +31,7 @@
     "html-entities": "^2.3.3",
     "luxon": "^2.4.0",
     "mongodb": "^4.6.0",
+    "node-cron": "^3.0.2",
     "puppeteer": "^15.3.0"
   },
   "devDependencies": {
