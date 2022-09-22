@@ -17,7 +17,7 @@ export default {
       member.guild.channels.cache.get('950578248784420874');
     const newMember = member.user.toString();
 
-    const welcomeMessage = `Hey ${newMember} , welcome to Coding Buddies, we're lucky to have you here. When you have a second, can you please tell us a little about yourself: 1) Where you're from 2) Where you are in your coding journey 3) What goals do you have for coding 4) How you found the server. Reach out to @admin if you have any questions or feedback requests for the server. We're all here to learn and grow together. Happy Coding!`;
+    const welcomeMessage = `Hey ${newMember}, welcome to Coding Buddies, we're lucky to have you here.\nWhen you have a second, could you please tell us a little about yourself:\n1) Where you're from.\n2) Where you are in your coding journey.\n3) Goals you have for coding.\n4) How you found the server.\nReach out to @admin if you have any questions or feedback requests for the server.\nWe're all here to learn and grow together. Happy Coding!`;
     welcomeChannel?.send(welcomeMessage);
     welcomeChannel?.send(randomGif);
     addUserToPoints(member.user.id);
