@@ -20,16 +20,16 @@ const imgFromHtmlGenerator = async (html = '') => {
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(html);
+    const content = await page.$('body');
+    const imageBuffer = await content.screenshot({ omitBackground: true });
 
-  const page = await browser.newPage();
-  await page.setContent(html);
-
-  const content = await page.$('body');
-  const imageBuffer = await content.screenshot({ omitBackground: true });
-
-  await page.close();
-
-  return imageBuffer;
+    return imageBuffer;
+  } finally {
+    await browser.close();
+  }
 };
 
 export { generateBody, imgFromHtmlGenerator };

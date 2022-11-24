@@ -33,8 +33,17 @@ const reportChannelPoints = async (interaction) => {
   const userListHTML = leaderBoardBody(channelName, caller, arrOfValidUsers);
   const body = generateBody(userListHTML, styles);
 
-  const img = await imgFromHtmlGenerator(body);
-  interaction.reply({ files: [{ attachment: img }] });
+  try {
+    const img = await imgFromHtmlGenerator(body, interaction);
+    if (!(img instanceof Error)) {
+      interaction.reply({ files: [{ attachment: img }] });
+    }
+  } catch (err) {
+    console.log(err);
+    interaction.reply(
+      "Oof, sorry. I couldn't figure out who the leader is. Try again."
+    );
+  }
 };
 
 export default reportChannelPoints;
