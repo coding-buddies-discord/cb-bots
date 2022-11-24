@@ -1,4 +1,3 @@
-// import { MessageEmbed } from "discord.js";
 import { addUserToPoints } from '../../db.js';
 
 export default {
@@ -30,6 +29,6 @@ Reach out to @admin if you have any questions or feedback requests for the serve
 We're all here to learn and grow together. Happy Coding!`;
     welcomeChannel?.send(welcomeMessage);
     welcomeChannel?.send(randomGif);
-    addUserToPoints(member.user.id);
+    addUserToPoints(member.user.id).catch(r => console.error(r));
   },
 };

@@ -31,7 +31,7 @@ async function givePoint(command, interaction, isMessage) {
   } else {
     // try to add the user to the DB, if they are already there
     // db function will reject this
-    addUserToPoints(mentionId);
+    await addUserToPoints(mentionId);
 
     const canAddPoint = await testDates(mentionId, interaction);
     if (!canAddPoint) {

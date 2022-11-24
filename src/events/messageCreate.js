@@ -1,4 +1,3 @@
-// import config from "../../config.js";
 import client from '../index.js';
 import {
   sendPing,
@@ -9,7 +8,7 @@ import {
 } from '../message_replies/index.js';
 import { addUserToPoints } from '../../db.js';
 
-function matchSufix(str) {
+function matchSuffix(str) {
   const myExp = /<@!?\d+> ?\+{2}/g;
   // it will always return an array, in case there's no match, the array will be empty
   const matches = [...str.matchAll(myExp)];
@@ -34,13 +33,13 @@ export default {
     // Prefix and message content
     const { content } = interaction;
 
-    // finds prefix at the beggining
+    // finds prefix at the beginning
     const findPrefix = content.match(/^!\w+/);
     // if there's a match, tries to grab the first value of the array or undefined;
     const prefixCommand = findPrefix?.[0];
-    const findSufix = matchSufix(content);
+    const findSuffix = matchSuffix(content);
 
-    if (!findSufix.length && !prefixCommand) {
+    if (!findSuffix.length && !prefixCommand) {
       return;
     }
 
@@ -53,7 +52,7 @@ export default {
           interaction.channel.send('ping');
           break;
         case '!points':
-          reportChannelPoints(interaction);
+          await reportChannelPoints(interaction);
           break;
         case '!help':
           helpCommand(interaction, client);
@@ -68,10 +67,10 @@ export default {
       }
     }
 
-    if (findSufix.length) {
+    if (findSuffix.length) {
       const isMessage = /--m$/.test(content);
 
-      new Set(findSufix).forEach((command) =>
+      new Set(findSuffix).forEach((command) =>
         givePoint(command, interaction, isMessage)
       );
     }
