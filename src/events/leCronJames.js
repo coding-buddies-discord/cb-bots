@@ -9,7 +9,7 @@ const lecronJames = async (client) => {
     '0 30 8 * * FRI',
     () => {
       channel.send(
-        "@here Happy Friday Coding Buddies! Drop your weekly wins below, doesn't matter how big or small, code or not! 🎉👇 Let's hear it...."
+        "@here Happy Friday Coding Buddies! Drop your weekly wins below, doesn't matter how big or small, code or not! 🎉👇 Let's hear it..."
       );
     },
     {
