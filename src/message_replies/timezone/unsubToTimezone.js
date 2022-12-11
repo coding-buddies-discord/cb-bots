@@ -1,9 +1,9 @@
-import { insertTimezone } from '../../../db.js';
+import BuddiesModel from '../../../models/BuddiesModel.js';
 
 const unsubToTimezone = async (interaction) => {
   const author = interaction.author.id;
   try {
-    await insertTimezone(author);
+    await BuddiesModel.insertTimezone(author);
     interaction.reply("You're now Unsubscribed from the `!timezone` command");
   } catch (err) {
     console.log(err);
