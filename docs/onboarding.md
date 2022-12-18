@@ -6,12 +6,14 @@ Coding Buddies Bot is a bot that serves the Coding Buddies Discord community. Th
 
 ## Joining The Community 🏡 🤝
 
-Coding Buddies is a Discord community where we get together to make new friends and build a community around all things code. There are two servers, Coding Buddies and cb bot development server.
+Coding Buddies is a Discord community where we get together to make new friends and build a community around all things code. There are two servers, Coding Buddies and Coding Buddies Bot Devs server.
 
 #### Coding Buddies
- The main server for the community production version of the bot runs in this server. This is where we use what we build. [Join](https://discord.gg/HBjyUt5R) When you join, please answer the bot (that you'll be working on soon 🎉) and
+ The main server for the community production version of the bot runs in this server. This is where we use what we build. [Join here.](https://discord.gg/HBjyUt5R) When you join, please answer the bot's question in #welcome (that you'll be working on soon 🎉) and say hello in #bot-build.
 
-#### cb cod development
+ If you're already a member, but not a member of `Coding Buddies Bot Devs` then say you want in on the fun in #bot-build
+
+#### Coding Buddies Bot Devs
 A bot development server for Buddies contributing to the bot. When you run the bot locally, this is the server the bot will run.
 
 ## Getting Started with The Bot 🚦
@@ -52,7 +54,7 @@ Once you've gotten your ENV file added and your depdencies installed, you should
 
 `Ready as Bot Buddy#9722`
 
-Go to any channel in `cb bot developement` channel and type `!ping` you should get a response back.
+Go to any channel in `Coding Buddies Bot Devs` and type `!ping` you should get a response back.
 
 It's also good practice to post in #general and say you're running the bot.
 
