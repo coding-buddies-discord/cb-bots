@@ -4,7 +4,6 @@ import {
   reportChannelPoints,
   givePoint,
   helpCommand,
-  timezone,
 } from '../message_replies/index.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
 
@@ -60,8 +59,6 @@ export default {
         case '!goodbot':
           interaction.reply('☺️');
           break;
-        case '!timezone':
-          return timezone(interaction);
         default:
           return;
       }

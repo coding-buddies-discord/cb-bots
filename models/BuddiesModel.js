@@ -96,8 +96,8 @@ export default class BuddiesModel {
         return dateComparison < 1000 * 60;
       });
 
-      // eslint-disable-next-line no-shadow
       const isValidPoint = newLastPointsGivenBy.every(
+        // eslint-disable-next-line no-shadow
         ({ userId }) => userId !== interaction.author.id
       );
       lastPointsGivenBy = newLastPointsGivenBy;
@@ -186,26 +186,6 @@ export default class BuddiesModel {
       const allUsers = await db.distinct('_id');
       allUsers.forEach((userID) => addUserToCache(userID));
       return cache;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  static async insertTimeZone(_id, timezone = null) {
-    try {
-      const db = await this.connectDb();
-      await db.updateOne({ _id }, { $set: { timezone } });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  static async findTimeZone(id) {
-    try {
-      const db = await this.connectDb();
-      const user = await db.findOne({ _id: id });
-      const timezone = user?.timezone;
-      return { timezone };
     } catch (error) {
       console.log(error);
     }
