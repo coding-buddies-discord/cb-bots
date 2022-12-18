@@ -96,8 +96,8 @@ export default class BuddiesModel {
         return dateComparison < 1000 * 60;
       });
 
-      // eslint-disable-next-line no-shadow
       const isValidPoint = newLastPointsGivenBy.every(
+        // eslint-disable-next-line no-shadow
         ({ userId }) => userId !== interaction.author.id
       );
       lastPointsGivenBy = newLastPointsGivenBy;
@@ -175,6 +175,23 @@ export default class BuddiesModel {
 
       const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
       return sortedList.slice(0, nameAmount);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async globalPoints(nameAmount = 1) {
+    try {
+      const db = await this.connectDb();
+      const allUsers = await db.find().toArray();
+
+      const listOfPoints = allUsers.map(({ _id, pointsReceived }) => {
+        return { userID: _id, points: pointsReceived.length };
+      });
+
+      const userList = listOfPoints.slice(0, nameAmount);
+      const sortedList = userList.sort((a, b) => b.points - a.points);
+      return sortedList;
     } catch (error) {
       console.log(error);
     }
