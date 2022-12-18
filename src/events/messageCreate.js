@@ -6,7 +6,7 @@ import {
   helpCommand,
   timezone,
 } from '../message_replies/index.js';
-import { addUserToPoints } from '../../db.js';
+import BuddiesModel from '../../models/BuddiesModel.js';
 
 function matchSuffix(str) {
   const myExp = /<@!?\d+> ?\+{2}/g;
@@ -24,7 +24,7 @@ export default {
 
     // try to add the user to the points DB, if they are already there
     // db function will reject this
-    await addUserToPoints(interaction.author.id);
+    await BuddiesModel.addUserToPoints(interaction.author.id);
     // NOTE: THIS IS COMPLETE
     // if (isNewUser) {
     //  sendBotIntro(interaction);

@@ -2,10 +2,10 @@
 import { Client, Intents } from 'discord.js';
 import * as eventsObj from './events/index.js';
 import dotenv from 'dotenv';
-import { populateUserCache } from '../db.js';
+import BuddiesModel from '../models/BuddiesModel.js';
 
 // eslint-disable-next-line no-unused-vars
-const userCache = (async () => await populateUserCache())();
+const userCache = (async () => await BuddiesModel.populateUserCache())();
 
 const { NODE_ENV } = process.env;
 

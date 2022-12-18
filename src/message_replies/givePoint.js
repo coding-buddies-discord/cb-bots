@@ -1,11 +1,6 @@
 import { getUserIdFromMention } from '../utils/getUserIdFromMention.js';
 import { isUserValid } from '../utils/isUserValid.js';
-import {
-  addUserToPoints,
-  giveUserAPoint,
-  countGivenPoint,
-  testDates,
-} from '../../db.js';
+import BuddiesModel from '../../models/BuddiesModel.js';
 
 async function givePoint(command, interaction, isMessage) {
   const mentionId = getUserIdFromMention(command);
@@ -31,16 +26,18 @@ async function givePoint(command, interaction, isMessage) {
   } else {
     // try to add the user to the DB, if they are already there
     // db function will reject this
-    await addUserToPoints(mentionId);
 
-    const canAddPoint = await testDates(mentionId, interaction);
+    await BuddiesModel.addUserToPoints(mentionId);
+
+
+    const canAddPoint = await BuddiesModel.testDates(mentionId, interaction);
     if (!canAddPoint) {
       interaction.reply(
         `Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${username}** another point.😅`
       );
     }
     if (canAddPoint) {
-      await giveUserAPoint(mentionId, interaction);
+      await BuddiesModel.giveUserAPoint(mentionId, interaction);
 
       if (!isMessage) {
         try {
@@ -57,7 +54,7 @@ async function givePoint(command, interaction, isMessage) {
       if (isMessage) {
         const emojis = ['🔥', '💯', '💃🏾', '💪🏾'];
         const randomNumber = Math.floor(Math.random() * 3);
-        const { score, scoreTotal } = await countGivenPoint(
+        const { score, scoreTotal } = await BuddiesModel.countGivenPoint(
           mentionId,
           interaction.channelId
         );

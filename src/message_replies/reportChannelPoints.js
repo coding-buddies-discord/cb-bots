@@ -1,4 +1,4 @@
-import { channelPoints } from '../../db.js';
+import BuddiesModel from '../../models/BuddiesModel.js';
 import { isUserValid } from '../utils/isUserValid.js';
 import {
   imgFromHtmlGenerator,
@@ -7,8 +7,9 @@ import {
 import { leaderBoardBody, styles } from '../image_templates/points.js';
 
 const reportChannelPoints = async (interaction) => {
-  const { channelId } = interaction;
-  const topPointEarners = await channelPoints(channelId, 8);
+  const { channelId, author } = interaction;
+  const { id: callerId } = author;
+  const topPointEarners = await BuddiesModel.channelPoints(channelId, 8);
 
   const arrOfValidUsers = [];
   for (const { userID, points } of topPointEarners) {
@@ -26,6 +27,29 @@ const reportChannelPoints = async (interaction) => {
     return interaction.reply(
       'There are no points in this channel yet, you should give someone one.😏'
     );
+  }
+
+  // if the caller is not in the top 8, go get their point data and append it to the end of the list
+  if (
+    !arrOfValidUsers.filter((validUser) => validUser.user.id === callerId)
+      .length > 0
+  ) {
+    const callerData = await BuddiesModel.getUser(callerId).catch((err) =>
+      console.log(err)
+    );
+
+    const { username, validUser, user } = await isUserValid(
+      interaction,
+      callerId
+    );
+
+    validUser
+      ? arrOfValidUsers.push({
+          username,
+          points: callerData.pointsReceived.length,
+          user,
+        })
+      : null;
   }
 
   const caller = interaction.author.username;
