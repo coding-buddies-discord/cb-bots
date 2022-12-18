@@ -1,6 +1,6 @@
 import ct from 'countries-and-timezones';
 import { MessageActionRow, MessageSelectMenu } from 'discord.js';
-import { insertTimezone } from '../../../db.js';
+import BuddiesModel from '../../../models/BuddiesModel.js';
 
 const subOrUpdateToTimezone = async (value, interaction, flag) => {
   const countryInfo = ct.getCountry(value.toUpperCase());
@@ -38,7 +38,7 @@ const subOrUpdateToTimezone = async (value, interaction, flag) => {
     const timezone = m.values[0];
     const subOrUp = flag === '--sub' ? 'subscribed to' : 'updated your info on';
     try {
-      await insertTimezone(author, timezone);
+      await BuddiesModel.insertTimezone(author, timezone);
       interaction.reply(`You've now ${subOrUp} the \`!timezone\` command!`);
     } catch (err) {
       console.log(err);

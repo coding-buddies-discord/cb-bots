@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { getUserIdFromMention } from '../../utils/getUserIdFromMention.js';
 import { isUserValid } from '../../utils/isUserValid.js';
-import { findTimezone } from '../../../db.js';
+import BuddiesModel from '../../../models/BuddiesModel.js';
 
 const getUserTimezone = async (interaction, value) => {
   const currentDate = DateTime.now();
@@ -13,7 +13,7 @@ const getUserTimezone = async (interaction, value) => {
       return interaction.reply(`**${id || value}** is not a valid user`);
     }
 
-    const { timezone } = await findTimezone(id);
+    const { timezone } = await BuddiesModel.findTimezone(id);
 
     if (!timezone) {
       return interaction.reply(
