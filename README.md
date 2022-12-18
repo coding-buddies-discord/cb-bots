@@ -12,22 +12,22 @@ If you're reading this, you've been invited to this repo, so that means you're a
 We are generally going to follow these principles:
  - All ideas are worthy of conversation
  - All contributions are equal, no matter how big or how small
- - We here to learn and grow, that can lead to disagreements but we vow to work through them to build cool shit.
- - Be patient with eachother, no question is too small or trivial.
- - This list is ever growing.
+ - We here to learn and grow, that can lead to disagreements, but we vow to work through them to build cool shit.
+ - Be patient with each other, no question is too small or trivial.
+ - This list is ever-growing.
 
  ### Rules
  - Don't criticize someone elses' code. If you think something could be done better, PR a change with an explanation.
  - You can only approve a PR, once you've had a PR approved.
 
 ### Proposed Bot Features
-Here is a list of the features this bot will handle. This list is on-going and is by no means complete:
+Here is a list of the features this bot will handle. This list is ongoing and is by no means complete:
   1. Streak Bot - a bot that tracks our member's coding streaks on a daily basis to encourage people to keep coming back to coding
   2. Welcome Bot - a bot that welcomes new members and ask them simple questions to help get them acclimated in the server
   3. Points Bot - a bot that allows users to give others points for helping them with their coding problems and tracks this points.
 
 ### Workflow
-We will be collaborating on Github to get this done. Our workflow will be simple:
+We will be collaborating on GitHub to get this done. Our workflow will be simple:
   1. Pull this repo to your machine
   2. Create a branches everytime you're adding a feature or fixing something. These branches should follow this convention: [name]/[what-the-branch-is-doing] e.g. `earn/initializes-bot`
   3. Commit your branch to the repo and PR it into `main`.

@@ -26,7 +26,9 @@ async function givePoint(command, interaction, isMessage) {
   } else {
     // try to add the user to the DB, if they are already there
     // db function will reject this
+
     await BuddiesModel.addUserToPoints(mentionId);
+
 
     const canAddPoint = await BuddiesModel.testDates(mentionId, interaction);
     if (!canAddPoint) {

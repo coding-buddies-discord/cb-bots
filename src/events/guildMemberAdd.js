@@ -1,6 +1,7 @@
 // import { MessageEmbed } from "discord.js";
 import BuddiesModel from '../../models/BuddiesModel.js';
 
+
 export default {
   name: 'guildMemberAdd',
   execute(member) {
@@ -30,6 +31,8 @@ Reach out to @admin if you have any questions or feedback requests for the serve
 We're all here to learn and grow together. Happy Coding!`;
     welcomeChannel?.send(welcomeMessage);
     welcomeChannel?.send(randomGif);
+
     BuddiesModel.addUserToPoints(member.user.id);
+
   },
 };
