@@ -54,7 +54,7 @@ export default {
           break;
         case '!points':
           if (/-g$/.test(content)) {
-            reportGlobalPoints(interaction);
+            return await reportGlobalPoints(interaction);
           }
           return await reportChannelPoints(interaction);
 
