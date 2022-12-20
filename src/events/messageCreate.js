@@ -2,9 +2,9 @@ import client from '../index.js';
 import {
   sendPing,
   reportChannelPoints,
-  reportGlobalPoints,
   givePoint,
   helpCommand,
+  timezone,
 } from '../message_replies/index.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
 
@@ -52,17 +52,16 @@ export default {
           interaction.channel.send('ping');
           break;
         case '!points':
-          if (/-g$/.test(content)) {
-            return await reportGlobalPoints(interaction);
-          }
-          return await reportChannelPoints(interaction);
-
+          await reportChannelPoints(interaction);
+          break;
         case '!help':
           helpCommand(interaction, client);
           break;
         case '!goodbot':
           interaction.reply('☺️');
           break;
+        case '!timezone':
+          return timezone(interaction);
         default:
           return;
       }
