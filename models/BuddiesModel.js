@@ -189,9 +189,8 @@ export default class BuddiesModel {
         return { userID: _id, points: pointsReceived.length };
       });
 
-      const userList = listOfPoints.slice(0, nameAmount);
-      const sortedList = userList.sort((a, b) => b.points - a.points);
-      return sortedList;
+      const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
+      return sortedList.slice(0, nameAmount);
     } catch (error) {
       console.log(error);
     }
