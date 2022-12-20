@@ -180,6 +180,22 @@ export default class BuddiesModel {
     }
   }
 
+  static async globalPoints(nameAmount = 1) {
+    try {
+      const db = await this.connectDb();
+      const allUsers = await db.find().toArray();
+
+      const listOfPoints = allUsers.map(({ _id, pointsReceived }) => {
+        return { userID: _id, points: pointsReceived.length };
+      });
+
+      const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
+      return sortedList.slice(0, nameAmount);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async populateUserCache(cache = userCache) {
     try {
       const db = await this.connectDb();

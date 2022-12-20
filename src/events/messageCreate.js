@@ -2,6 +2,7 @@ import client from '../index.js';
 import {
   sendPing,
   reportChannelPoints,
+  reportGlobalPoints,
   givePoint,
   helpCommand,
 } from '../message_replies/index.js';
@@ -51,8 +52,11 @@ export default {
           interaction.channel.send('ping');
           break;
         case '!points':
-          await reportChannelPoints(interaction);
-          break;
+          if (/-g$/.test(content)) {
+            return await reportGlobalPoints(interaction);
+          }
+          return await reportChannelPoints(interaction);
+
         case '!help':
           helpCommand(interaction, client);
           break;
