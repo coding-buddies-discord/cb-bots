@@ -29,6 +29,7 @@ async function givePoint(command, interaction, isMessage) {
 
     await BuddiesModel.addUserToPoints(mentionId);
 
+
     const canAddPoint = await BuddiesModel.testDates(mentionId, interaction);
     if (!canAddPoint) {
       interaction.reply(
