@@ -6,7 +6,6 @@ import {
 import givePoint from './givePoint.js';
 import helpCommand from './helpCommand.js';
 import sendBotIntro from './sendBotIntro.js';
-import timezone from './timezone/index.js';
 
 export {
   sendPing,
@@ -15,5 +14,4 @@ export {
   givePoint,
   helpCommand,
   sendBotIntro,
-  timezone,
 };
