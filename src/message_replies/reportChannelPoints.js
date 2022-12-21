@@ -76,14 +76,11 @@ const reportGlobalPoints = async (interaction) => {
   }
 
   const arrOfValidUsers = [];
-  for (const { userID, points } of topPointEarners) {
+  for (const { _id, points, rank } of topPointEarners) {
     if (points === 0) continue;
-    const { username, validUser, user } = await isUserValid(
-      interaction,
-      userID
-    );
+    const { username, validUser, user } = await isUserValid(interaction, _id);
     if (validUser) {
-      arrOfValidUsers.push({ username, points, user });
+      arrOfValidUsers.push({ username, points, user, rank });
     }
   }
 
