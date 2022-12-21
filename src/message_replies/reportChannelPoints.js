@@ -85,10 +85,10 @@ const reportGlobalPoints = async (interaction) => {
   }
 
   // if the caller is not in the top 8, go get their point data and append it to the end of the list
-  if (!arrOfValidUsers.filter(({ user }) => user.id === callerId).length > 0) {
-    const callerData = await BuddiesModel.getUser(callerId).catch((err) =>
-      console.log(err)
-    );
+  if (!arrOfValidUsers.filter(({ user }) => user.id === callerId).length) {
+    const { points, rank } = await BuddiesModel.getUserGlobalPoints(
+      callerId
+    ).catch((err) => console.log(err));
 
     const { username, validUser, user } = await isUserValid(
       interaction,
@@ -98,7 +98,8 @@ const reportGlobalPoints = async (interaction) => {
     validUser &&
       arrOfValidUsers.push({
         username,
-        points: callerData.pointsReceived.length,
+        points,
+        rank,
         user,
       });
   }
