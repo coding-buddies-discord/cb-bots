@@ -51,9 +51,11 @@ export default {
     if (prefixCommand) {
       if (prefixCommand === '!ping') {
         sendPing(interaction, client);
+        return;
       }
       if (prefixCommand === '!pong') {
         interaction.channel.send('ping');
+        return;
       }
       if (prefixCommand === '!points') {
         if (/-g$/.test(content)) {
@@ -63,12 +65,15 @@ export default {
       }
       if (prefixCommand === '!help') {
         helpCommand(interaction, client);
+        return;
       }
       if (prefixCommand === '!goodbot') {
         interaction.reply('☺️');
+        return;
       }
       if (LANGUAGE_FORMATS.includes(prefixCommand)) {
         formatCode(interaction, prefixCommand);
+        return;
       }
       return;
     }
