@@ -216,17 +216,41 @@ export default class BuddiesModel {
     }
   }
 
-  static async globalPoints(nameAmount = 1) {
+  static async globalPoints(channelName, nameAmount = 8) {
     try {
       const db = await this.connectDb();
-      const allUsers = await db.find().toArray();
 
-      const listOfPoints = allUsers.map(({ _id, pointsReceived }) => {
-        return { userID: _id, points: pointsReceived.length };
-      });
+      // Bellow are all necessary filters to call the db
+      // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
+      const matchRule = { $match: { 'pointsReceived.0': { $exists: true } } };
+      // will keep only those which `'pointsReceived.channel'` equals `channelName`;
+      // will grab the value of the array and put in the points property
+      const totalPointsFilter = {
+        $project: {
+          points: {
+            $size: '$pointsReceived',
+          },
+        },
+      };
+      // will limit the final result by the name amount
+      const limitFilter = { $limit: nameAmount };
+      const rankFilter = {
+        $setWindowFields: {
+          // partitionBy: '$points',
+          sortBy: { points: -1 },
+          output: {
+            rank: {
+              $rank: {},
+            },
+          },
+        },
+      };
 
-      const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
-      return sortedList.slice(0, nameAmount);
+      // here we put the all the filters, and will return an array of objects
+      // with the shape of `{_id: String, points: int, rank: int}`;
+      return await db
+        .aggregate([matchRule, totalPointsFilter, rankFilter, limitFilter])
+        .toArray();
     } catch (error) {
       console.log(error);
     }
