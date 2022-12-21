@@ -7,6 +7,10 @@ import {
   helpCommand,
 } from '../message_replies/index.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
+import formatCode from '../message_replies/formatCode.js';
+import { SIMPLE_MODELS } from '../../models/SIMPLE_MODELS.js';
+
+const { LANGUAGE_FORMATS } = SIMPLE_MODELS;
 
 function matchSuffix(str) {
   const myExp = /<@!?\d+> ?\+{2}/g;
@@ -43,29 +47,30 @@ export default {
       return;
     }
 
+    // TODO: let's refacotr this to a lookup table once !points becomes one function
     if (prefixCommand) {
-      switch (prefixCommand.toLowerCase()) {
-        case '!ping':
-          sendPing(interaction, client);
-          break;
-        case '!pong':
-          interaction.channel.send('ping');
-          break;
-        case '!points':
-          if (/-g$/.test(content)) {
-            return await reportGlobalPoints(interaction);
-          }
-          return await reportChannelPoints(interaction);
-
-        case '!help':
-          helpCommand(interaction, client);
-          break;
-        case '!goodbot':
-          interaction.reply('☺️');
-          break;
-        default:
-          return;
+      if (prefixCommand === '!ping') {
+        sendPing(interaction, client);
       }
+      if (prefixCommand === '!pong') {
+        interaction.channel.send('ping');
+      }
+      if (prefixCommand === '!points') {
+        if (/-g$/.test(content)) {
+          return await reportGlobalPoints(interaction);
+        }
+        return await reportChannelPoints(interaction);
+      }
+      if (prefixCommand === '!help') {
+        helpCommand(interaction, client);
+      }
+      if (prefixCommand === '!goodbot') {
+        interaction.reply('☺️');
+      }
+      if (LANGUAGE_FORMATS.includes(prefixCommand)) {
+        formatCode(interaction, prefixCommand);
+      }
+      return;
     }
 
     if (findSuffix.length) {
