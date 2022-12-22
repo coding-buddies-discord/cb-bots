@@ -15,20 +15,22 @@ const generateBody = (body, styles) => {
   `;
 };
 
+const browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
+
 const imgFromHtmlGenerator = async (html = '') => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
+  let page;
   try {
-    const page = await browser.newPage();
+    page = await browser.newPage();
     await page.setContent(html);
     const content = await page.$('body');
     const imageBuffer = await content.screenshot({ omitBackground: true });
 
     return imageBuffer;
   } finally {
-    await browser.close();
+    await page.close();
   }
 };
 

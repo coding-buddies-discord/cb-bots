@@ -52,7 +52,7 @@ export default {
           interaction.channel.send('ping');
           break;
         case '!points':
-          if (/-g$/.test(content)) {
+          if (/-[gG]$/.test(content)) {
             return await reportGlobalPoints(interaction);
           }
           return await reportChannelPoints(interaction);
