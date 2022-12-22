@@ -10,7 +10,8 @@
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "seed-points": "node ./src/utils/seeder.js"
   },
   "repository": {
     "type": "git",

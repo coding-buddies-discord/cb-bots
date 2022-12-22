@@ -54,11 +54,6 @@ export default class BuddiesModel {
     }
   }
 
-  static async clearCollection() {
-    const db = await this.connectDb();
-    db.deleteMany();
-  }
-
   static async addUserToPoints(userId) {
     const newUser = {};
     newUser._id = userId;
@@ -125,17 +120,11 @@ export default class BuddiesModel {
     );
     const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 
-    // console.log(newPoint)
-    // console.log(newPointGivenBy)
-
     try {
       const db = await this.connectDb();
       let user = await db.findOne({ _id: userId });
 
-      // console.log(user)
-
       if (!user) {
-        console.log('got here');
         await this.addUserToPoints(userId);
         user = await db.findOne({ _id: userId });
       }
