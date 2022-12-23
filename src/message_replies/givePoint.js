@@ -2,7 +2,7 @@ import { getUserIdFromMention } from '../utils/getUserIdFromMention.js';
 import { isUserValid } from '../utils/isUserValid.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
 
-async function givePoint(command, interaction, isMessage) {
+async function givePoint(command, interaction) {
   const mentionId = getUserIdFromMention(command);
   const caller = interaction.author.id;
 
@@ -38,28 +38,14 @@ async function givePoint(command, interaction, isMessage) {
     if (canAddPoint) {
       await BuddiesModel.giveUserAPoint(mentionId, interaction);
 
-      if (!isMessage) {
-        try {
-          const stonks = interaction.guild.emojis.cache.find(
-            (emoji) => emoji.name === 'stonks'
-          );
-          await interaction.react('🤖');
-          await interaction.react(stonks || '🔥');
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
-      if (isMessage) {
-        const emojis = ['🔥', '💯', '💃🏾', '💪🏾'];
-        const randomNumber = Math.floor(Math.random() * 3);
-        const { score, scoreTotal } = await BuddiesModel.countGivenPoint(
-          mentionId,
-          interaction.channelId
+      try {
+        const stonks = interaction.guild.emojis.cache.find(
+          (emoji) => emoji.name === 'stonks'
         );
-        interaction.reply(
-          `Woo! **${username}** has **${score} points** in <#${interaction.channelId}> and **${scoreTotal}** points in total. ${emojis[randomNumber]}`
-        );
+        await interaction.react('🤖');
+        await interaction.react(stonks || '🔥');
+      } catch (err) {
+        console.error(err);
       }
     }
   }

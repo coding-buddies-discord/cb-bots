@@ -145,20 +145,6 @@ export default class BuddiesModel {
     }
   }
 
-  static async countGivenPoint(userId, messageChannel) {
-    try {
-      const score = user.pointsReceived.filter(
-        ({ channel }) => channel === messageChannel
-      ).length;
-      const db = await this.connectDb();
-      const user = await db.findOne({ _id: userId });
-      const scoreTotal = user.pointsReceived.length;
-      return { score, scoreTotal };
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   static async channelPoints(channelName, nameAmount = 8) {
     try {
       const db = await this.connectDb();
