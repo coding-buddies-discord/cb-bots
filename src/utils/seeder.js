@@ -40,8 +40,12 @@ const giveMockPoint = () => {
 
 const seedPoints = async () => {
   // let's clear he db first
-  const db = await BuddiesModel.connectDb();
-  db.deleteMany();
+  try {
+    const db = await BuddiesModel.connectDb();
+    await db.deleteMany();
+  } catch (err) {
+    console.log(err);
+  }
 
   // loop through and create 100 points in the server
   for (let i = 0; i < 100; i += 1) {
@@ -50,7 +54,9 @@ const seedPoints = async () => {
   }
 };
 
-seedPoints();
-console.log('Data was seeded to the points collection, happy developing 🥳');
-// quit the terminal process
-exit();
+(async () => {
+  await seedPoints();
+  console.log('Data was seeded to the points collection, happy developing 🥳');
+  // quit the terminal process
+  exit();
+})();

@@ -9,9 +9,14 @@ import { SIMPLE_MODELS } from './SIMPLE_MODELS.js';
 
 dotenv.config();
 
-const client = new MongoClient(process.env.MONGO_URI);
+const { ACTIVE_ENV, MONGO_URI } = process.env;
+
+const client = new MongoClient(MONGO_URI);
 
 const { DB_NAME, COLLECTION_NAME } = SIMPLE_MODELS;
+
+// this will determine which collection to work against
+const collection = ACTIVE_ENV === 'test' ? 'test' : COLLECTION_NAME;
 
 // class User {
 // 	constructor(id) {
@@ -46,7 +51,7 @@ export default class BuddiesModel {
       await client.connect();
       const db = client.db(DB_NAME);
       // collection name should be passed in, in the future
-      const buddies = db.collection(COLLECTION_NAME);
+      const buddies = db.collection(collection);
       return buddies;
     } catch (error) {
       console.log(error);

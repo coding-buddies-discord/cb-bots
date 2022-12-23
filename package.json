@@ -11,7 +11,7 @@
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
     "prepare": "husky install",
-    "seed-points": "node ./src/utils/seeder.js"
+    "seed-points": "ACTIVE_ENV=test node ./src/utils/seeder.js"
   },
   "repository": {
     "type": "git",
