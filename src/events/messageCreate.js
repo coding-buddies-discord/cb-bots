@@ -69,7 +69,7 @@ export default {
     }
 
     if (findSuffix.length) {
-      new Set(findSuffix).forEach((command) => givePoint(command, interaction));
+      givePoint(findSuffix, interaction);
     }
   },
 };
