@@ -22,8 +22,13 @@ Points will be given ONLY for the first 10 people mentioned`
     );
   }
 
-  // cool. is working right?! as you saw, we need to console.log just to see the data change
+  const validIDs = mentionIDs.filter((mentionID) => mentionID.isPossibleID);
+  const invalidIDs = mentionIDs.filter((mentionID) => !mentionID.isPossibleID);
 
+  for await (const id of validIDs) {
+    console.log('for loop -->', id);
+    console.log(invalidIDs);
+  }
   // const { validUser, username } = await isUserValid(interaction, mentionId);
 
   // // <@123456789012345678> will be an id but not a valid one,
