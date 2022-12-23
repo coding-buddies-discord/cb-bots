@@ -2,10 +2,10 @@ export const getUserIdFromMention = (IDstr) => {
   const userId = IDstr.match(/(?!0)+(\d)+/g);
   const id = userId?.[0];
 
-  if (!id) {
+  if (!id || id.length < 8) {
     const falseID = IDstr.match(/\d+/g)?.[0] || 0;
-    return { isValidID: false, id: falseID };
+    return { isPossibleID: false, id: falseID };
   }
 
-  return { id, isValidID: true };
+  return { id, isPossibleID: true };
 };
