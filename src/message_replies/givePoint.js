@@ -66,8 +66,17 @@ Points will be given ONLY for the first 9 people mentioned`
       `Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${str}** another point.😅`
     );
   }
-
-  console.log(givenPoints);
+  if (givenPoints) {
+    try {
+      const stonks = interaction.guild.emojis.cache.find(
+        (emoji) => emoji.name === 'stonks'
+      );
+      await interaction.react('🤖');
+      await interaction.react(stonks || '🔥');
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
 
 export default givePoint;
