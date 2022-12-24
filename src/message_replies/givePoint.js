@@ -46,7 +46,21 @@ Points will be given ONLY for the first 9 people mentioned`
     interaction.reply(`Lmao <@!${caller}>, you can't give yourself a point.`);
   }
 
-  console.log(BuddiesModel);
+  let givenPoints = 0;
+  const notGivenPoints = [];
+
+  for (const { id, name } of discordVerified) {
+    await BuddiesModel.addUserToPoints(id);
+    const canAddPoint = await BuddiesModel.testDates(id, interaction);
+    if (!canAddPoint) {
+      notGivenPoints.push(name);
+      continue;
+    }
+    await BuddiesModel.giveUserAPoint(id, interaction);
+    givenPoints++;
+  }
+
+  console.log(givenPoints, notGivenPoints.lenght);
 }
 
 export default givePoint;
