@@ -7,7 +7,10 @@ const ARRAY_OF_POINTS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', 
 async function givePoint(commandArr, interaction) {
   const caller = interaction.author.id;
 
+  // check if ids are valid or not and returns an array of objects
+  // the objects have shape {isPossible: boolean, ID: string}
   let mentionIDs = commandArr.map((command) => getUserIdFromMention(command));
+  // filter those that are repeated
   mentionIDs = mentionIDs.reduce((acc, IDObj) => {
     const filteredLength = acc.filter(({ id }) => id !== IDObj.id).length;
     if (acc.length === filteredLength) {
@@ -26,8 +29,10 @@ Points will be given ONLY for the first 9 people mentioned`
     );
   }
 
+  // maintain only those that are valid
   const validIDs = mentionIDs.filter((mentionID) => mentionID.isPossibleID);
 
+  // checks against discord and keeps only those that are valid in the discord API
   let discordVerified = [];
   for (const idObj of validIDs) {
     const { validUser, username: name } = await isUserValid(
@@ -38,7 +43,8 @@ Points will be given ONLY for the first 9 people mentioned`
       discordVerified.push({ ...idObj, name });
     }
   }
-  // finding if is someone has the same id than the caller. if it is it will get the length
+
+  // finding if is someone has the same id than the caller. if it is it will get the length.
   const hasCallerMention = discordVerified.filter(
     ({ id }) => caller === id
   ).length;
@@ -48,9 +54,11 @@ Points will be given ONLY for the first 9 people mentioned`
     interaction.reply(`Lmao <@!${caller}>, you can't give yourself a point.`);
   }
 
+  // keeps track the total points given and those who weren't
   let givenPoints = 0;
   const notGivenPoints = [];
 
+  //  check agaist the DB if the date is valid (last points was more than 1min ago)
   for (const { id, name } of discordVerified) {
     await BuddiesModel.addUserToPoints(id);
     const canAddPoint = await BuddiesModel.testDates(id, interaction);
