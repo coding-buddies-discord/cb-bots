@@ -2,6 +2,8 @@ import { getUserIdFromMention } from '../utils/getUserIdFromMention.js';
 import { isUserValid } from '../utils/isUserValid.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
 
+const ARRAY_OF_POINTS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
+
 async function givePoint(commandArr, interaction) {
   const caller = interaction.author.id;
 
@@ -73,6 +75,7 @@ Points will be given ONLY for the first 9 people mentioned`
       );
       await interaction.react('🤖');
       await interaction.react(stonks || '🔥');
+      await interaction.react(ARRAY_OF_POINTS[givenPoints - 1]);
     } catch (err) {
       console.error(err);
     }
