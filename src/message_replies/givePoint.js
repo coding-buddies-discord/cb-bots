@@ -26,7 +26,7 @@ Points will be given ONLY for the first 9 people mentioned`
 
   const validIDs = mentionIDs.filter((mentionID) => mentionID.isPossibleID);
 
-  const discordVerified = [];
+  let discordVerified = [];
   for (const idObj of validIDs) {
     const { validUser, username: name } = await isUserValid(
       interaction,
@@ -36,7 +36,17 @@ Points will be given ONLY for the first 9 people mentioned`
       discordVerified.push({ ...idObj, name });
     }
   }
-  console.log(discordVerified, BuddiesModel);
+  // finding if is someone has the same id than the caller. if it is it will get the length
+  const hasCallerMention = discordVerified.filter(
+    ({ id }) => caller === id
+  ).length;
+
+  if (hasCallerMention) {
+    discordVerified = discordVerified.filter(({ id }) => id !== caller);
+    interaction.reply(`Lmao <@!${caller}>, you can't give yourself a point.`);
+  }
+
+  console.log(BuddiesModel);
 }
 
 export default givePoint;
