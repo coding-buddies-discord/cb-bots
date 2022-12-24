@@ -60,7 +60,14 @@ Points will be given ONLY for the first 9 people mentioned`
     givenPoints++;
   }
 
-  console.log(givenPoints, notGivenPoints.lenght);
+  if (notGivenPoints.length) {
+    const str = notGivenPoints.reduce((curr, acc) => curr + `${acc}, `, '');
+    interaction.reply(
+      `Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${str}** another point.😅`
+    );
+  }
+
+  console.log(givenPoints);
 }
 
 export default givePoint;
