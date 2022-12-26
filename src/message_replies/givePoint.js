@@ -10,9 +10,12 @@ async function givePoint(commandArr, interaction) {
   // check if ids are valid or not and returns an array of objects
   // the objects have shape {isPossible: boolean, ID: string}
   let mentionIDs = commandArr.map((command) => getUserIdFromMention(command));
+
   // filter those that are repeated
   mentionIDs = mentionIDs.reduce((acc, IDObj) => {
+    // removes those who's id is alread in the array and grab the array length
     const filteredLength = acc.filter(({ id }) => id !== IDObj.id).length;
+
     if (acc.length === filteredLength) {
       acc.push(IDObj);
       return acc;
@@ -32,7 +35,7 @@ Points will be given ONLY for the first 9 people mentioned`
   // maintain only those that are valid
   const validIDs = mentionIDs.filter((mentionID) => mentionID.isPossibleID);
 
-  // checks against discord and keeps only those that are valid in the discord API
+  // checks ID's against discord and keeps only those that are valid in the discord API
   let discordVerified = [];
   for (const idObj of validIDs) {
     const { validUser, username: name } = await isUserValid(
@@ -44,12 +47,11 @@ Points will be given ONLY for the first 9 people mentioned`
     }
   }
 
-  // finding if is someone has the same id than the caller. if it is it will get the length.
-  const hasCallerMention = discordVerified.filter(
-    ({ id }) => caller === id
-  ).length;
+  // finding if is someone has the same id than the caller.
+  const hasCallerMention = discordVerified.some(({ id }) => caller === id);
 
   if (hasCallerMention) {
+    // filters the caller out
     discordVerified = discordVerified.filter(({ id }) => id !== caller);
     interaction.reply(`Lmao <@!${caller}>, you can't give yourself a point.`);
   }
@@ -58,7 +60,7 @@ Points will be given ONLY for the first 9 people mentioned`
   let givenPoints = 0;
   const notGivenPoints = [];
 
-  //  check agaist the DB if the date is valid (last points was more than 1min ago)
+  //  check agaist the DB if the date is valid (if last points was more than 1min ago)
   for (const { id, name } of discordVerified) {
     await BuddiesModel.addUserToPoints(id);
     const canAddPoint = await BuddiesModel.testDates(id, interaction);
