@@ -15,11 +15,11 @@ const collection = ACTIVE_ENV === 'test' ? 'test' : COLLECTION_NAME;
 export const connectDb = async () => {
   try {
     await client.connect();
-    const db = client.db(DB_NAME);
+    const connect = client.db(DB_NAME);
     // collection name should be passed in, in the future
-    const buddies = db.collection(collection);
+    const db = connect.collection(collection);
     // need to export the client so that it can be closed in testing otherwise Jest will freak out
-    return [buddies, client];
+    return { db, client };
   } catch (error) {
     console.log(error);
     throw new Error('Failed to connect to DB');

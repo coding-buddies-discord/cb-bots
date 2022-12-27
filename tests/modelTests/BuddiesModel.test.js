@@ -3,7 +3,7 @@ import { createMockPoint } from '../../src/utils/seedUtils.js';
 import { clearCache, userCache } from '../../src/utils/userCache';
 import { connectDb } from '../../src/utils/mongoUtils';
 
-let [db, client] = await connectDb();
+let { db, client } = await connectDb();
 
 describe('BuddiesModel Tests - Success', () => {
   // before each test in this suite runs, let's make sure the test collection and cache are cleared

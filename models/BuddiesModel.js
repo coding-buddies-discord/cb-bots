@@ -32,7 +32,7 @@ class PointGivenBy {
   }
 }
 
-const [db] = await connectDb();
+const { db } = await connectDb();
 
 export default class BuddiesModel {
   // NOTE: this method doesn't make sense to me. It returns false or nothing inconsistently
