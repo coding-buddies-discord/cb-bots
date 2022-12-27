@@ -62,7 +62,6 @@ Points will be given ONLY for the first 9 people mentioned`
 
   //  check agaist the DB if the date is valid (if last points was more than 1min ago)
   for (const { id, name } of discordVerified) {
-    await BuddiesModel.addUserToPoints(id);
     const canAddPoint = await BuddiesModel.testDates(id, interaction);
     if (!canAddPoint) {
       notGivenPoints.push(name);
@@ -73,7 +72,7 @@ Points will be given ONLY for the first 9 people mentioned`
   }
 
   if (notGivenPoints.length) {
-    const str = notGivenPoints.reduce((curr, acc) => curr + `${acc}, `, '');
+    const str = notGivenPoints.reduce((curr, acc) => `${curr}${acc}, `, '');
     interaction.reply(
       `Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${str}** another point.😅`
     );
