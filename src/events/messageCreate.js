@@ -69,11 +69,7 @@ export default {
     }
 
     if (findSuffix.length) {
-      const isMessage = /--m$/.test(content);
-
-      new Set(findSuffix).forEach((command) =>
-        givePoint(command, interaction, isMessage)
-      );
+      givePoint(findSuffix, interaction);
     }
   },
 };
