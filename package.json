@@ -33,7 +33,8 @@
     "lodash": "^4.17.21",
     "mongodb": "^4.6.0",
     "node-cron": "^3.0.2",
-    "puppeteer": "^15.3.0"
+    "puppeteer": "^15.3.0",
+    "sinon": "^15.0.1"
   },
   "devDependencies": {
     "@types/node": "^18.6.3",
