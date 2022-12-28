@@ -1,17 +1,9 @@
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
 import {
   checkUserCache,
   addUserToCache,
   userCache,
 } from '../src/utils/userCache.js';
-import { SIMPLE_MODELS } from './SIMPLE_MODELS.js';
-
-dotenv.config();
-
-const client = new MongoClient(process.env.MONGO_URI);
-
-const { DB_NAME, COLLECTION_NAME } = SIMPLE_MODELS;
+import { connectDb } from '../src/utils/mongoUtils';
 
 // class User {
 // 	constructor(id) {
@@ -40,20 +32,10 @@ class PointGivenBy {
   }
 }
 
-export default class BuddiesModel {
-  static async connectDb() {
-    try {
-      await client.connect();
-      const db = client.db(DB_NAME);
-      // collection name should be passed in, in the future
-      const buddies = db.collection(COLLECTION_NAME);
-      return buddies;
-    } catch (error) {
-      console.log(error);
-      throw new Error('Failed to connect to DB');
-    }
-  }
+const { db } = await connectDb();
 
+export default class BuddiesModel {
+  // NOTE: this method doesn't make sense to me. It returns false or nothing inconsistently
   static async addUserToPoints(userId) {
     const newUser = {};
     newUser._id = userId;
@@ -65,11 +47,13 @@ export default class BuddiesModel {
       if (inCache) {
         return false;
       }
-      const db = await this.connectDb();
+
       const foundUser = await db.findOne({ _id: userId });
+
       if (foundUser) {
         return;
       }
+
       await db.insertOne(newUser);
       addUserToCache(userId);
       return true;
@@ -82,7 +66,6 @@ export default class BuddiesModel {
   static async testDates(userId, interaction) {
     const currentDate = Date.now();
     try {
-      const db = await this.connectDb();
       const user = await db.findOne({ _id: userId });
       let lastPointsGivenBy = user?.lastPointsGivenBy;
 
@@ -121,11 +104,12 @@ export default class BuddiesModel {
     const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 
     try {
-      const db = await this.connectDb();
+      // NOTE: we should check cache first to avoid a db hit if we can
       let user = await db.findOne({ _id: userId });
 
       if (!user) {
         await this.addUserToPoints(userId);
+
         user = await db.findOne({ _id: userId });
       }
 
@@ -145,13 +129,25 @@ export default class BuddiesModel {
     }
   }
 
+  static async countGivenPoint(userId, messageChannel) {
+    try {
+      const score = user.pointsReceived.filter(
+        ({ channel }) => channel === messageChannel
+      ).length;
+      const user = await db.findOne({ _id: userId });
+      const scoreTotal = user.pointsReceived.length;
+      return { score, scoreTotal };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async channelPoints(channelName, nameAmount = 8) {
     try {
-      const db = await this.connectDb();
-
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
       const matchRule = { $match: { 'pointsReceived.channel': channelName } };
+
       // will keep only those which `'pointsReceived.channel'` equals `channelName`;
       const channelFilter = {
         $project: {
@@ -188,7 +184,7 @@ export default class BuddiesModel {
 
       // here we put the all the filters, and will return an array of objects
       // with the shape of `{_id: String, points: int, rank: int}`;
-      return await db
+      return db
         .aggregate([
           matchRule,
           channelFilter,
@@ -204,8 +200,6 @@ export default class BuddiesModel {
 
   static async globalPoints(channelName, nameAmount = 8) {
     try {
-      const db = await this.connectDb();
-
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
       const matchRule = { $match: { 'pointsReceived.0': { $exists: true } } };
@@ -244,7 +238,6 @@ export default class BuddiesModel {
 
   static async populateUserCache(cache = userCache) {
     try {
-      const db = await this.connectDb();
       const allUsers = await db.distinct('_id');
       allUsers.forEach((userID) => addUserToCache(userID));
       return cache;
@@ -255,8 +248,6 @@ export default class BuddiesModel {
 
   static async getUserGlobalPoints(_id) {
     try {
-      const db = await this.connectDb();
-
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
       const matchRule = { $match: { 'pointsReceived.0': { $exists: true } } };
@@ -303,8 +294,6 @@ export default class BuddiesModel {
 
   static async getUserInfoOfChannel(_id, channelId) {
     try {
-      const db = await this.connectDb();
-
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
       const matchRule = { $match: { 'pointsReceived.channel': channelId } };

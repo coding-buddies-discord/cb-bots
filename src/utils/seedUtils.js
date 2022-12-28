@@ -1,6 +1,5 @@
 import BuddiesModel from '../../models/BuddiesModel.js';
 import _ from 'lodash';
-import { exit } from 'process';
 
 // list of users to create points for
 const devUsers = [
@@ -24,7 +23,7 @@ const devChannels = [
 ];
 
 // creates args for fake points
-const giveMockPoint = () => {
+export const createMockPoint = () => {
   const users = [...devUsers];
   const userId = _.sample(users);
   users.splice(users.indexOf(userId), 1);
@@ -38,19 +37,18 @@ const giveMockPoint = () => {
   return [userId, interaction];
 };
 
-const seedPoints = async () => {
+export const seedPoints = async () => {
   // let's clear he db first
-  const db = await BuddiesModel.connectDb();
-  db.deleteMany();
+  try {
+    const db = await BuddiesModel.connectDb();
+    await db.deleteMany();
+  } catch (err) {
+    console.log(err);
+  }
 
   // loop through and create 100 points in the server
   for (let i = 0; i < 100; i += 1) {
-    const [userId, interaction] = giveMockPoint();
+    const [userId, interaction] = createMockPoint();
     await BuddiesModel.giveUserAPoint(userId, interaction);
   }
 };
-
-seedPoints();
-console.log('Data was seeded to the points collection, happy developing 🥳');
-// quit the terminal process
-exit();

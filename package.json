@@ -6,12 +6,12 @@
   "node": ">=16.0.0",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test": "ACTIVE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
     "prepare": "husky install",
-    "seed-points": "node ./src/utils/seeder.js"
+    "seed-points": "node ./scripts/seedDb.js"
   },
   "repository": {
     "type": "git",
