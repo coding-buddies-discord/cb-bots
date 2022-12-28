@@ -6,11 +6,12 @@
   "node": ">=16.0.0",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test": "ACTIVE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=development nodemon ./src/index.js",
     "deploy-commands": "node deploy-commands.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "seed-points": "node ./scripts/seedDb.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "dotenv": "^16.0.0",
     "html-entities": "^2.3.3",
     "js-beautify": "^1.14.7",
+    "lodash": "^4.17.21",
     "mongodb": "^4.6.0",
     "node-cron": "^3.0.2",
     "puppeteer": "^15.3.0"

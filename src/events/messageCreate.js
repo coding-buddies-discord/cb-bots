@@ -58,7 +58,7 @@ export default {
         return;
       }
       if (prefixCommand === '!points') {
-        if (/-g$/.test(content)) {
+        if (/-[gG]$/.test(content)) {
           return await reportGlobalPoints(interaction);
         }
         return await reportChannelPoints(interaction);
@@ -79,11 +79,7 @@ export default {
     }
 
     if (findSuffix.length) {
-      const isMessage = /--m$/.test(content);
-
-      new Set(findSuffix).forEach((command) =>
-        givePoint(command, interaction, isMessage)
-      );
+      givePoint(findSuffix, interaction);
     }
   },
 };

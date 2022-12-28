@@ -1,17 +1,9 @@
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
 import {
   checkUserCache,
   addUserToCache,
   userCache,
 } from '../src/utils/userCache.js';
-import { SIMPLE_MODELS } from './SIMPLE_MODELS.js';
-
-dotenv.config();
-
-const client = new MongoClient(process.env.MONGO_URI);
-
-const { DB_NAME, COLLECTION_NAME } = SIMPLE_MODELS;
+import { connectDb } from '../src/utils/mongoUtils.js';
 
 // class User {
 // 	constructor(id) {
@@ -40,20 +32,10 @@ class PointGivenBy {
   }
 }
 
-export default class BuddiesModel {
-  static async connectDb() {
-    try {
-      await client.connect();
-      const db = client.db(DB_NAME);
-      // collection name should be passed in, in the future
-      const buddies = db.collection(COLLECTION_NAME);
-      return buddies;
-    } catch (error) {
-      console.log(error);
-      throw new Error('Failed to connect to DB');
-    }
-  }
+const { db } = await connectDb();
 
+export default class BuddiesModel {
+  // NOTE: this method doesn't make sense to me. It returns false or nothing inconsistently
   static async addUserToPoints(userId) {
     const newUser = {};
     newUser._id = userId;
@@ -65,11 +47,13 @@ export default class BuddiesModel {
       if (inCache) {
         return false;
       }
-      const db = await this.connectDb();
+
       const foundUser = await db.findOne({ _id: userId });
+
       if (foundUser) {
         return;
       }
+
       await db.insertOne(newUser);
       addUserToCache(userId);
       return true;
@@ -82,7 +66,6 @@ export default class BuddiesModel {
   static async testDates(userId, interaction) {
     const currentDate = Date.now();
     try {
-      const db = await this.connectDb();
       const user = await db.findOne({ _id: userId });
       let lastPointsGivenBy = user?.lastPointsGivenBy;
 
@@ -121,11 +104,12 @@ export default class BuddiesModel {
     const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 
     try {
-      const db = await this.connectDb();
+      // NOTE: we should check cache first to avoid a db hit if we can
       let user = await db.findOne({ _id: userId });
 
       if (!user) {
         await this.addUserToPoints(userId);
+
         user = await db.findOne({ _id: userId });
       }
 
@@ -150,7 +134,6 @@ export default class BuddiesModel {
       const score = user.pointsReceived.filter(
         ({ channel }) => channel === messageChannel
       ).length;
-      const db = await this.connectDb();
       const user = await db.findOne({ _id: userId });
       const scoreTotal = user.pointsReceived.length;
       return { score, scoreTotal };
@@ -159,38 +142,95 @@ export default class BuddiesModel {
     }
   }
 
-  static async channelPoints(channelName, nameAmount = 1) {
+  static async channelPoints(channelName, nameAmount = 8) {
     try {
-      const db = await this.connectDb();
-      const allUsers = await db.find().toArray();
+      // Bellow are all necessary filters to call the db
+      // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
+      const matchRule = { $match: { 'pointsReceived.channel': channelName } };
 
-      const listOfPoints = allUsers.map((user) => {
-        const possiblePoints = user.pointsReceived.filter(
-          ({ channel }) => channel === channelName
-        );
-        const userID = user._id;
-        const points = possiblePoints.length;
-        return { userID, points };
-      });
+      // will keep only those which `'pointsReceived.channel'` equals `channelName`;
+      const channelFilter = {
+        $project: {
+          points: {
+            $filter: {
+              input: '$pointsReceived',
+              as: 'pointObj',
+              cond: { $eq: ['$$pointObj.channel', channelName] },
+            },
+          },
+        },
+      };
+      // will grab the value of the array and put in the points property
+      const totalPointsFilter = {
+        $project: {
+          points: {
+            $size: '$points',
+          },
+        },
+      };
+      // will limit the final result by the name amount
+      const limitFilter = { $limit: nameAmount };
+      const rankFilter = {
+        $setWindowFields: {
+          // partitionBy: '$points',
+          sortBy: { points: -1 },
+          output: {
+            rank: {
+              $rank: {},
+            },
+          },
+        },
+      };
 
-      const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
-      return sortedList.slice(0, nameAmount);
+      // here we put the all the filters, and will return an array of objects
+      // with the shape of `{_id: String, points: int, rank: int}`;
+      return db
+        .aggregate([
+          matchRule,
+          channelFilter,
+          totalPointsFilter,
+          rankFilter,
+          limitFilter,
+        ])
+        .toArray();
     } catch (error) {
       console.log(error);
     }
   }
 
-  static async globalPoints(nameAmount = 1) {
+  static async globalPoints(channelName, nameAmount = 8) {
     try {
-      const db = await this.connectDb();
-      const allUsers = await db.find().toArray();
+      // Bellow are all necessary filters to call the db
+      // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
+      const matchRule = { $match: { 'pointsReceived.0': { $exists: true } } };
+      // will keep only those which `'pointsReceived.channel'` equals `channelName`;
+      // will grab the value of the array and put in the points property
+      const totalPointsFilter = {
+        $project: {
+          points: {
+            $size: '$pointsReceived',
+          },
+        },
+      };
+      // will limit the final result by the name amount
+      const limitFilter = { $limit: nameAmount };
+      const rankFilter = {
+        $setWindowFields: {
+          // partitionBy: '$points',
+          sortBy: { points: -1 },
+          output: {
+            rank: {
+              $rank: {},
+            },
+          },
+        },
+      };
 
-      const listOfPoints = allUsers.map(({ _id, pointsReceived }) => {
-        return { userID: _id, points: pointsReceived.length };
-      });
-
-      const sortedList = listOfPoints.sort((a, b) => b.points - a.points);
-      return sortedList.slice(0, nameAmount);
+      // here we put the all the filters, and will return an array of objects
+      // with the shape of `{_id: String, points: int, rank: int}`;
+      return await db
+        .aggregate([matchRule, totalPointsFilter, rankFilter, limitFilter])
+        .toArray();
     } catch (error) {
       console.log(error);
     }
@@ -198,7 +238,6 @@ export default class BuddiesModel {
 
   static async populateUserCache(cache = userCache) {
     try {
-      const db = await this.connectDb();
       const allUsers = await db.distinct('_id');
       allUsers.forEach((userID) => addUserToCache(userID));
       return cache;
@@ -207,13 +246,111 @@ export default class BuddiesModel {
     }
   }
 
-  static async getUser(id) {
+  static async getUserGlobalPoints(_id) {
     try {
-      const db = await this.connectDb();
-      const hello = await db.findOne({ _id: id });
-      return hello;
-    } catch (err) {
-      console.log(err);
+      // Bellow are all necessary filters to call the db
+      // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
+      const matchRule = { $match: { 'pointsReceived.0': { $exists: true } } };
+      // will keep only those which `'pointsReceived.channel'` equals `channelName`;
+
+      // will grab the value of the array and put in the points property
+      const totalPointsFilter = {
+        $project: {
+          points: {
+            $size: '$pointsReceived',
+          },
+        },
+      };
+      // will filter by who has the bigger amount of points
+
+      const rankFilter = {
+        $setWindowFields: {
+          // partitionBy: '$points',
+          sortBy: { points: -1 },
+          output: {
+            rank: {
+              $rank: {},
+            },
+          },
+        },
+      };
+      const userFilter = { $match: { _id: _id } };
+
+      // here we put the all the filters, and will return an array of objects
+      // with the shape of `{_id: String, points: int}`;
+      const resultArr = await db
+        .aggregate([matchRule, totalPointsFilter, rankFilter, userFilter])
+        .toArray();
+
+      if (!resultArr.length) {
+        return { points: 0, rank: '#' };
+      }
+
+      return resultArr[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async getUserInfoOfChannel(_id, channelId) {
+    try {
+      // Bellow are all necessary filters to call the db
+      // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
+      const matchRule = { $match: { 'pointsReceived.channel': channelId } };
+      // will keep only those which `'pointsReceived.channel'` equals `channelName`;
+      const channelFilter = {
+        $project: {
+          points: {
+            $filter: {
+              input: '$pointsReceived',
+              as: 'pointObj',
+              cond: { $eq: ['$$pointObj.channel', channelId] },
+            },
+          },
+        },
+      };
+      // will grab the value of the array and put in the points property
+      const totalPointsFilter = {
+        $project: {
+          points: {
+            $size: '$points',
+          },
+        },
+      };
+      // will filter by who has the bigger amount of points
+
+      const rankFilter = {
+        $setWindowFields: {
+          // partitionBy: '$points',
+          sortBy: { points: -1 },
+          output: {
+            rank: {
+              $rank: {},
+            },
+          },
+        },
+      };
+      const userFilter = { $match: { _id: _id } };
+
+      // here we put the all the filters, and will return an array of objects
+      // with the shape of `{_id: String, points: int}`;
+      const resultArr = await db
+        .aggregate([
+          matchRule,
+          channelFilter,
+          totalPointsFilter,
+          rankFilter,
+          userFilter,
+        ])
+        .toArray();
+
+      if (!resultArr.length) {
+        return { points: 0, rank: '#' };
+      }
+
+      return resultArr[0];
+    } catch (error) {
+      console.log(error);
     }
   }
 }
