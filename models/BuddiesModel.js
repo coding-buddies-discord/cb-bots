@@ -3,7 +3,7 @@ import {
   addUserToCache,
   userCache,
 } from '../src/utils/userCache.js';
-import { connectDb } from '../src/utils/mongoUtils';
+import { connectDb } from '../src/utils/mongoUtils.js';
 
 // class User {
 // 	constructor(id) {

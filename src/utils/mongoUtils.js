@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
-import { SIMPLE_MODELS } from '../../models/SIMPLE_MODELS';
+import { SIMPLE_MODELS } from '../../models/SIMPLE_MODELS.js';
 
 dotenv.config();
 
