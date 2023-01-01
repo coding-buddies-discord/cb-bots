@@ -12,6 +12,7 @@ const styles = `
     text-align: center; 
     font-size: 40px;
    margin: 30px; 
+   padding-top: 30px; 
     
   }
   
@@ -28,6 +29,7 @@ const styles = `
     display: flex; 
     flex-direction: column; 
     align-items: center; 
+    padding-bottom: 30px; 
   }
   
   li{
