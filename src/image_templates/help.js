@@ -62,7 +62,7 @@ function createStaticHtml() {
 }
 
 function createDynamicHtml() {
-  const commandList = commandsList
+  const commandsLi = commandsList
     .map((commands) => {
       return `
   <li><b>${commands.command}:</b> ${commands.description} </li>
@@ -70,7 +70,7 @@ function createDynamicHtml() {
     })
     .join('');
 
-  return '<ul>' + commandList + '</ul>';
+  return '<ul>' + commandsLi + '</ul>';
 }
 
 export { styles, createStaticHtml };
