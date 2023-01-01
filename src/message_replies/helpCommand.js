@@ -14,6 +14,7 @@ const helpCommand = async (interaction) => {
     }
   } catch (error) {
     interaction.reply('Unable to send help at this time. ¯\\_(ツ)_/¯');
+    console.log(error);
   }
 };
 
