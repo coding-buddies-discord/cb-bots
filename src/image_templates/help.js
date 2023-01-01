@@ -48,4 +48,62 @@ const styles = `
     font-weight: 600; 
   }
 `;
-console.log(styles);
+
+function createStaticHtml() {
+  const staticHtml = `
+    <h1>HELP COMMANDS</h1>
+    <div class="root">${createDynamicHtml()}</div>
+    `;
+  return staticHtml;
+}
+
+function createDynamicHtml() {
+  const ulStart = '<ul>';
+
+  const commandsArr = [
+    {
+      command: '!ping',
+      description: 'View the bot response time in milliseconds.',
+    },
+    {
+      command: '@user++',
+      description:
+        'If a user has been helpful to you, mention their username and add ++ to give them a point.',
+    },
+    {
+      command: '!points',
+      description:
+        'View the top 5 users who have attained the most points in the current channel.',
+    },
+    {
+      command: '!ping',
+      description: 'View the bot response time in milliseconds.',
+    },
+    {
+      command: '@user++',
+      description:
+        'If a user has been helpful to you, mention their username and add ++ to give them a point.',
+    },
+    {
+      command: '!points',
+      description:
+        'View the top 5 users who have attained the most points in the current channel.',
+    },
+  ];
+
+  const commandList = commandsArr.map((commands) => {
+    return `
+  <li><b>${commands.command}:</b> ${commands.description} </li>
+  `;
+  });
+
+  const ulEnd = '</ul>';
+
+  const newCommandList = commandList.join('');
+
+  const finalCommandList = ulStart + newCommandList + ulEnd;
+
+  return finalCommandList;
+}
+
+export { styles, createStaticHtml };
