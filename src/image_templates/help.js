@@ -60,8 +60,6 @@ function createStaticHtml() {
 }
 
 function createDynamicHtml() {
-  const ulStart = '<ul>';
-
   const commandsArr = [
     {
       command: '!ping',
@@ -93,19 +91,15 @@ function createDynamicHtml() {
     },
   ];
 
-  const commandList = commandsArr.map((commands) => {
-    return `
+  const commandList = commandsArr
+    .map((commands) => {
+      return `
   <li><b>${commands.command}:</b> ${commands.description} </li>
   `;
-  });
+    })
+    .join('');
 
-  const ulEnd = '</ul>';
-
-  const newCommandList = commandList.join('');
-
-  const finalCommandList = ulStart + newCommandList + ulEnd;
-
-  return finalCommandList;
+  return '<ul>' + commandList + '</ul>';
 }
 
 export { styles, createStaticHtml };
