@@ -1,3 +1,5 @@
+import commandsList from '../../models/commandsList.js';
+
 const styles = `
 * {
     font-family: Rubik,sans-serif;
@@ -60,38 +62,7 @@ function createStaticHtml() {
 }
 
 function createDynamicHtml() {
-  const commandsArr = [
-    {
-      command: '!ping',
-      description: 'View the bot response time in milliseconds.',
-    },
-    {
-      command: '@user++',
-      description:
-        'If a user has been helpful to you, mention their username and add ++ to give them a point.',
-    },
-    {
-      command: '!points',
-      description:
-        'View the top 5 users who have attained the most points in the current channel.',
-    },
-    {
-      command: '!ping',
-      description: 'View the bot response time in milliseconds.',
-    },
-    {
-      command: '@user++',
-      description:
-        'If a user has been helpful to you, mention their username and add ++ to give them a point.',
-    },
-    {
-      command: '!points',
-      description:
-        'View the top 5 users who have attained the most points in the current channel.',
-    },
-  ];
-
-  const commandList = commandsArr
+  const commandList = commandsList
     .map((commands) => {
       return `
   <li><b>${commands.command}:</b> ${commands.description} </li>
