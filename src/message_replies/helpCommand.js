@@ -1,23 +1,21 @@
-import { MessageEmbed } from 'discord.js';
-import commandsList from '../../models/commandsList.js';
+import { styles, createStaticHtml } from '../image_templates/help.js';
+import {
+  imgFromHtmlGenerator,
+  generateBody,
+} from '../image_templates/imgFromHtmlGenerator.js';
 
-const helpCommand = (interaction) => {
-  function outputCommands() {
-    const newArray = [];
-    for (let i = 0; i < commandsList.length; i++) {
-      newArray.push(
-        `\`${commandsList[i].command}\`: ${commandsList[i].description}\n`
-      );
+const helpCommand = async (interaction) => {
+  const staticHtml = createStaticHtml();
+  const body = generateBody(staticHtml, styles);
+  try {
+    const image = await imgFromHtmlGenerator(body);
+    if (!(image instanceof Error)) {
+      interaction.reply({ files: [{ attachment: image }] });
     }
-    newArray.sort();
-    return newArray.join('');
+  } catch (error) {
+    interaction.reply('Unable to send help at this time. ¯\\_(ツ)_/¯');
+    console.log(error);
   }
-
-  const embed = new MessageEmbed()
-    .setTitle('Bot Buddy Commands List')
-    .setColor('RANDOM')
-    .setDescription(`${outputCommands()}`);
-  interaction.reply({ embeds: [embed] });
 };
 
 export default helpCommand;
