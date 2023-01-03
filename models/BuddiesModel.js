@@ -63,6 +63,7 @@ export default class BuddiesModel {
     }
   }
 
+  // eslint-disable-next-line no-shadow
   static async testDates(userId, interaction) {
     const currentDate = Date.now();
     try {
@@ -79,9 +80,9 @@ export default class BuddiesModel {
         return dateComparison < 1000 * 60;
       });
 
+      // eslint-disable-next-line no-shadow
       const isValidPoint = newLastPointsGivenBy.every(
-        // eslint-disable-next-line no-shadow
-        ({ userId }) => userId !== interaction.author.id
+        ({ _userId }) => _userId !== interaction.author.id
       );
       lastPointsGivenBy = newLastPointsGivenBy;
 

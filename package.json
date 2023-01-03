@@ -1,6 +1,6 @@
 {
-  "name": "streak-bot",
-  "version": "1.0.0",
+  "name": "coding-buddies-bot",
+  "version": "2.0.0",
   "description": "A bot to help encourage Coding Buddies",
   "exports": "./index.js",
   "node": ">=16.0.0",
@@ -26,6 +26,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
     "@discordjs/rest": "^0.3.0",
+    "countries-and-timezones": "^3.3.0",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "html-entities": "^2.3.3",
@@ -37,7 +38,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.6.3",
-    "eslint": "^8.8.0",
+    "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
