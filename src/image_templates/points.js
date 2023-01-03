@@ -2,8 +2,8 @@ import { encode } from 'html-entities';
 
 const listOfUserPoints = (caller, arr) => {
   return arr
-    .map((user, index) => {
-      const { username, points } = user;
+    .map((user) => {
+      const { username, points, rank } = user;
       const { id, avatar } = user.user;
       const defaultPic = 'https://cdn.discordapp.com/embed/avatars/0.png';
       const src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.webp`;
@@ -13,7 +13,7 @@ const listOfUserPoints = (caller, arr) => {
       return `
 <div class="userInfo ${isCaller}">
   <img src="${imgSrc}" class="user-avatar" >
-  <span class="place">#${index + 1}</span>
+  <span class="place">#${rank}</span>
   <span class="name">${encode(username)}</span>
   <span class="points">${points}</span>
  </div>

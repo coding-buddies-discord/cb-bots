@@ -2,11 +2,15 @@ import client from '../index.js';
 import {
   sendPing,
   reportChannelPoints,
+  reportGlobalPoints,
   givePoint,
   helpCommand,
-  timezone,
 } from '../message_replies/index.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
+import formatCode from '../message_replies/formatCode.js';
+import { SIMPLE_MODELS } from '../../models/SIMPLE_MODELS.js';
+
+const { LANGUAGE_FORMATS } = SIMPLE_MODELS;
 
 function matchSuffix(str) {
   const myExp = /<@!?\d+> ?\+{2}/g;
@@ -43,36 +47,39 @@ export default {
       return;
     }
 
+    // TODO: let's refacotr this to a lookup table once !points becomes one function
     if (prefixCommand) {
-      switch (prefixCommand.toLowerCase()) {
-        case '!ping':
-          sendPing(interaction, client);
-          break;
-        case '!pong':
-          interaction.channel.send('ping');
-          break;
-        case '!points':
-          await reportChannelPoints(interaction);
-          break;
-        case '!help':
-          helpCommand(interaction, client);
-          break;
-        case '!goodbot':
-          interaction.reply('☺️');
-          break;
-        case '!timezone':
-          return timezone(interaction);
-        default:
-          return;
+      if (prefixCommand === '!ping') {
+        sendPing(interaction, client);
+        return;
       }
+      if (prefixCommand === '!pong') {
+        interaction.channel.send('ping');
+        return;
+      }
+      if (prefixCommand === '!points') {
+        if (/-[gG]$/.test(content)) {
+          return await reportGlobalPoints(interaction);
+        }
+        return await reportChannelPoints(interaction);
+      }
+      if (prefixCommand === '!help') {
+        helpCommand(interaction, client);
+        return;
+      }
+      if (prefixCommand === '!goodbot') {
+        interaction.reply('☺️');
+        return;
+      }
+      if (LANGUAGE_FORMATS.includes(prefixCommand)) {
+        formatCode(interaction, prefixCommand);
+        return;
+      }
+      return;
     }
 
     if (findSuffix.length) {
-      const isMessage = /--m$/.test(content);
-
-      new Set(findSuffix).forEach((command) =>
-        givePoint(command, interaction, isMessage)
-      );
+      givePoint(findSuffix, interaction);
     }
   },
 };
