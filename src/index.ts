@@ -19,7 +19,6 @@ if (NODE_ENV === 'development') {
 
 const token = process.env.TOKEN;
 
-
 // Create a new client instance
 const client = new Client({
   intents: [
@@ -30,7 +29,6 @@ const client = new Client({
   ],
 });
 
-
 interface Event {
   name: string;
   once?: boolean;
@@ -39,10 +37,10 @@ interface Event {
 
 const events: Event[] = Object.values(eventsObj);
 
-events.forEach((e: Event) => {
+events.forEach((e) => {
   e.once
-    ? client.once(e.name, (interaction: Interaction) => e.execute(interaction)) 
-      : client.on(e.name, (interaction) => e.execute(interaction));
+    ? client.once(e.name, (interaction: Interaction) => e.execute(interaction))
+    : client.on(e.name, (interaction) => e.execute(interaction));
 });
 
 // Login to Discord with your client's token
