@@ -53,7 +53,7 @@ const styles = `
   }
 `;
 
-function createStaticHtml() {
+function createStaticHtml(): string {
   const staticHtml = `
     <h1>HELP COMMANDS</h1>
     <div class="root">${createDynamicHtml()}</div>
@@ -61,7 +61,7 @@ function createStaticHtml() {
   return staticHtml;
 }
 
-function createDynamicHtml() {
+function createDynamicHtml(): string {
   const commandsLi = commandsList
     .map((commands) => {
       return `
