@@ -1,12 +1,12 @@
-import { MessageEmbed } from 'discord.js';
+import { Client, Message, MessageEmbed } from 'discord.js';
 
-const sendPing = (interaction, client) => {
+const sendPing = (message: Message, client: Client): void => {
   const ping = client.ws.ping;
   const embed = new MessageEmbed()
     .setColor('RANDOM')
     .setAuthor({
-      name: interaction.author.tag,
-      iconURL: interaction.author.avatarURL(),
+      name: message.author.tag,
+      iconURL: message.author.avatarURL(),
     })
     .setDescription(ping + 'ms From Bot API')
     .setTimestamp()
@@ -14,7 +14,7 @@ const sendPing = (interaction, client) => {
       text: 'Pong!',
       iconURL: client.user.avatarURL(),
     });
-  interaction.reply({ embeds: [embed] });
+  message.reply({ embeds: [embed] });
 };
 
 export default sendPing;
