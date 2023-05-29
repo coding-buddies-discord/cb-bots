@@ -1,6 +1,6 @@
 import { Message, User } from 'discord.js';
 
-export type validUser = {
+type validatedUser = {
   username: string;
   validUser: boolean;
   user?: User;
@@ -9,9 +9,8 @@ export type validUser = {
 export const isUserValid = async (
   message: Message,
   userId: string
-): Promise<validUser> => {
+): Promise<validatedUser> => {
   try {
-    // eslint-disable-next-line no-unused-vars
     const user = await message.guild.members.fetch(userId);
     const newUser = user.user;
     return { username: newUser.username, validUser: true, user: newUser };
