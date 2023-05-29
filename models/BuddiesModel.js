@@ -67,22 +67,21 @@ export default class BuddiesModel {
   static async testDates(userId, interaction) {
     const currentDate = Date.now();
     try {
+      // finds the data from the user who's gonna receive the point
       const user = await db.findOne({ _id: userId });
-      let lastPointsGivenBy = user?.lastPointsGivenBy;
+      let { lastPointsGivenBy } = user;
 
-      if (!lastPointsGivenBy) {
-        return true;
-      }
+      if (!lastPointsGivenBy.length) return true;
 
       const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
-        const pointDate = new Date(date);
+        const pointDate = new Date(date).getTime();
         const dateComparison = currentDate - pointDate;
         return dateComparison < 1000 * 60;
       });
 
-      // eslint-disable-next-line no-shadow
       const isValidPoint = newLastPointsGivenBy.every(
-        ({ _userId }) => _userId !== interaction.author.id
+        // eslint-disable-next-line no-shadow
+        ({ userId }) => userId !== interaction.author.id
       );
       lastPointsGivenBy = newLastPointsGivenBy;
 
@@ -90,6 +89,7 @@ export default class BuddiesModel {
         { _id: userId },
         { $set: { lastPointsGivenBy: newLastPointsGivenBy } }
       );
+
       return isValidPoint;
     } catch (error) {
       console.log(error);
