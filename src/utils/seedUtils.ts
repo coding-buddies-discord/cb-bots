@@ -1,8 +1,12 @@
-import BuddiesModel from '../../models/BuddiesModel.js';
+import BuddiesModel, { PointsUser } from '../../models/BuddiesModel.js';
 import _ from 'lodash';
+import { connectDb } from './mongoUtils.js';
+import { Message } from 'discord.js';
 
 // list of users to create points for
-const devUsers = [
+type id = string;
+
+const devUsers: id[] = [
   '870622678329983056',
   '1045395050252734575',
   '302320182066544651',
@@ -13,7 +17,7 @@ const devUsers = [
   '804548489727442985',
 ];
 
-const devChannels = [
+const devChannels: id[] = [
   '940069955230109696',
   '939629913537929239',
   '941167349854248961',
@@ -22,9 +26,14 @@ const devChannels = [
   '995761623883055125',
 ];
 
+type Interaction = {
+  author: { id: string };
+  channelId: string;
+};
+
 // creates args for fake points
-export const createMockPoint = () => {
-  const users = [...devUsers];
+export const createMockPoint = (): [string, Interaction] => {
+  const users: id[] = [...devUsers];
   const userId = _.sample(users);
   users.splice(users.indexOf(userId), 1);
   const interaction = {
@@ -40,8 +49,8 @@ export const createMockPoint = () => {
 export const seedPoints = async () => {
   // let's clear he db first
   try {
-    const db = await BuddiesModel.connectDb();
-    await db.deleteMany();
+    const { db } = await connectDb();
+    db.deleteMany({});
   } catch (err) {
     console.log(err);
   }
@@ -49,6 +58,6 @@ export const seedPoints = async () => {
   // loop through and create 100 points in the server
   for (let i = 0; i < 100; i += 1) {
     const [userId, interaction] = createMockPoint();
-    await BuddiesModel.giveUserAPoint(userId, interaction);
+    await BuddiesModel.giveUserAPoint(userId, interaction as Message);
   }
 };

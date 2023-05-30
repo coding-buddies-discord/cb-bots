@@ -1,5 +1,5 @@
 // Require the necessary discord.js classes
-import { Client, Intents } from 'discord.js';
+import { Client, Intents, Interaction } from 'discord.js';
 import * as eventsObj from './events/index.js';
 import dotenv from 'dotenv';
 import BuddiesModel from '../models/BuddiesModel.js';
@@ -29,11 +29,18 @@ const client = new Client({
   ],
 });
 
-const events = Object.values(eventsObj);
-events.forEach((event) => {
-  event.once
-    ? client.once(event.name, (...args) => event.execute(...args))
-    : client.on(event.name, (...args) => event.execute(...args));
+interface Event {
+  name: string;
+  once?: boolean;
+  execute(interaction: any);
+}
+
+const events: Event[] = Object.values(eventsObj);
+
+events.forEach((e) => {
+  e.once
+    ? client.once(e.name, (interaction: Interaction) => e.execute(interaction))
+    : client.on(e.name, (interaction) => e.execute(interaction));
 });
 
 // Login to Discord with your client's token

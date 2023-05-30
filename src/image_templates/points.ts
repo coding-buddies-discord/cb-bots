@@ -1,6 +1,7 @@
 import { encode } from 'html-entities';
+import { rankedUser } from '../message_replies/reportChannelPoints';
 
-const listOfUserPoints = (caller, arr) => {
+const listOfUserPoints = (caller: string, arr: rankedUser[]): string => {
   return arr
     .map((user) => {
       const { username, points, rank } = user;
@@ -23,11 +24,11 @@ const listOfUserPoints = (caller, arr) => {
 };
 
 const leaderBoardBody = (
-  channelName,
-  caller,
-  usersArr,
+  channelName: string,
+  caller: string,
+  usersArr: rankedUser[],
   listOfUsers = listOfUserPoints
-) => {
+): string => {
   const usersList = listOfUsers(caller, usersArr);
   return `
 <h1>LEADERBOARD</h1>

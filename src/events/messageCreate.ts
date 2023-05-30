@@ -9,10 +9,11 @@ import {
 import BuddiesModel from '../../models/BuddiesModel.js';
 import formatCode from '../message_replies/formatCode.js';
 import { SIMPLE_MODELS } from '../../models/SIMPLE_MODELS.js';
+import { Message } from 'discord.js';
 
 const { LANGUAGE_FORMATS } = SIMPLE_MODELS;
 
-function matchSuffix(str) {
+function matchSuffix(str: string): string[] {
   const myExp = /<@!?\d+> ?\+{2}/g;
   // it will always return an array, in case there's no match, the array will be empty
   const matches = [...str.matchAll(myExp)];
@@ -22,20 +23,16 @@ function matchSuffix(str) {
 
 export default {
   name: 'messageCreate',
-  async execute(interaction) {
+  async execute(message: Message) {
     // Avoid an iteration
-    if (interaction.author.bot) return;
+    if (message.author.bot) return;
 
     // try to add the user to the points DB, if they are already there
     // db function will reject this
-    await BuddiesModel.addUserToPoints(interaction.author.id);
-    // NOTE: THIS IS COMPLETE
-    // if (isNewUser) {
-    //  sendBotIntro(interaction);
-    // }
+    await BuddiesModel.addUserToPoints(message.author.id);
 
     // Prefix and message content
-    const { content } = interaction;
+    const { content } = message;
 
     // finds prefix at the beginning
     const findPrefix = content.match(/^!\w+/);
@@ -50,36 +47,34 @@ export default {
     // TODO: let's refacotr this to a lookup table once !points becomes one function
     if (prefixCommand) {
       if (prefixCommand === '!ping') {
-        sendPing(interaction, client);
+        sendPing(message, client);
         return;
       }
       if (prefixCommand === '!pong') {
-        interaction.channel.send('ping');
+        message.channel.send('ping');
         return;
       }
       if (prefixCommand === '!points') {
         if (/-[gG]$/.test(content)) {
-          return await reportGlobalPoints(interaction);
+          return await reportGlobalPoints(message);
         }
-        return await reportChannelPoints(interaction);
+        return await reportChannelPoints(message);
       }
       if (prefixCommand === '!help') {
-        helpCommand(interaction, client);
+        helpCommand(message);
         return;
       }
       if (prefixCommand === '!goodbot') {
-        interaction.reply('☺️');
+        message.reply('☺️');
         return;
       }
       if (LANGUAGE_FORMATS.includes(prefixCommand)) {
-        formatCode(interaction, prefixCommand);
+        formatCode(message, prefixCommand);
         return;
       }
       return;
     }
 
-    if (findSuffix.length) {
-      givePoint(findSuffix, interaction);
-    }
+    givePoint(findSuffix, message);
   },
 };

@@ -1,9 +1,10 @@
+import { Client } from 'discord.js';
 import lecronJames from './leCronJames.js';
 
 export default {
   name: 'ready',
   once: true,
-  execute(client) {
+  execute(client: Client) {
     const { username, discriminator } = client.user;
     console.log(`Ready as ${username}#${discriminator}!`);
 

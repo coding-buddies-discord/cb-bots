@@ -1,11 +1,15 @@
-import { getUserIdFromMention } from '../utils/getUserIdFromMention.js';
+import {
+  getUserIdFromMention,
+  MaybeUser,
+} from '../utils/getUserIdFromMention.js';
 import { isUserValid } from '../utils/isUserValid.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
+import { Message } from 'discord.js';
 
 const ARRAY_OF_POINTS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
 
-async function givePoint(commandArr, interaction) {
-  const caller = interaction.author.id;
+async function givePoint(commandArr: string[], message: Message) {
+  const caller = message.author.id;
 
   // check if ids are valid or not and returns an array of objects
   // the objects have shape {isPossible: boolean, ID: string}
@@ -26,7 +30,7 @@ async function givePoint(commandArr, interaction) {
   if (mentionIDs.length > 9) {
     mentionIDs = mentionIDs.slice(0, 9);
 
-    await interaction.reply(
+    await message.reply(
       `Sorry <@!${caller}>, You can only give points to 9 people per message.
 Points will be given ONLY for the first 9 people mentioned`
     );
@@ -36,12 +40,12 @@ Points will be given ONLY for the first 9 people mentioned`
   const validIDs = mentionIDs.filter((mentionID) => mentionID.isPossibleID);
 
   // checks ID's against discord and keeps only those that are valid in the discord API
-  let discordVerified = [];
+
+  type discordVerified = MaybeUser & { name: string };
+
+  let discordVerified: discordVerified[] = [];
   for (const idObj of validIDs) {
-    const { validUser, username: name } = await isUserValid(
-      interaction,
-      idObj.id
-    );
+    const { validUser, username: name } = await isUserValid(message, idObj.id);
     if (validUser) {
       discordVerified.push({ ...idObj, name });
     }
@@ -53,38 +57,38 @@ Points will be given ONLY for the first 9 people mentioned`
   if (hasCallerMention) {
     // filters the caller out
     discordVerified = discordVerified.filter(({ id }) => id !== caller);
-    interaction.reply(`Lmao <@!${caller}>, you can't give yourself a point.`);
+    message.reply(`Lmao <@!${caller}>, you can't give yourself a point.`);
   }
 
   // keeps track the total points given and those who weren't
   let givenPoints = 0;
-  const notGivenPoints = [];
+  const notGivenPoints: string[] = [];
 
   //  check agaist the DB if the date is valid (if last points was more than 1min ago)
   for (const { id, name } of discordVerified) {
-    const canAddPoint = await BuddiesModel.testDates(id, interaction);
+    const canAddPoint = await BuddiesModel.testDates(id, message.author.id);
     if (!canAddPoint) {
       notGivenPoints.push(name);
       continue;
     }
-    await BuddiesModel.giveUserAPoint(id, interaction);
+    await BuddiesModel.giveUserAPoint(id, message);
     givenPoints++;
   }
 
   if (notGivenPoints.length) {
     const str = notGivenPoints.reduce((curr, acc) => `${curr}${acc}, `, '');
-    interaction.reply(
-      `Yo **${interaction.author.username}**, you have to wait **at least** a minute to give **${str}** another point.😅`
+    message.reply(
+      `Yo **${message.author.username}**, you have to wait **at least** a minute to give **${str}** another point.😅`
     );
   }
   if (givenPoints) {
     try {
-      const stonks = interaction.guild.emojis.cache.find(
+      const stonks = message.guild.emojis.cache.find(
         (emoji) => emoji.name === 'stonks'
       );
-      await interaction.react('🤖');
-      await interaction.react(stonks || '🔥');
-      await interaction.react(ARRAY_OF_POINTS[givenPoints - 1]);
+      await message.react('🤖');
+      await message.react(stonks || '🔥');
+      await message.react(ARRAY_OF_POINTS[givenPoints - 1]);
     } catch (err) {
       console.error(err);
     }

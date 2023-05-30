@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-const generateBody = (body, styles) => {
+const generateBody = (body: string, styles: string) => {
   return `
 <html>
     <head>
@@ -20,8 +20,8 @@ const browser = await puppeteer.launch({
   args: ['--no-sandbox', '--disable-setuid-sandbox'],
 });
 
-const imgFromHtmlGenerator = async (html = '') => {
-  let page;
+const imgFromHtmlGenerator = async (html = ''): Promise<string | Buffer> => {
+  let page: puppeteer.Page;
   try {
     page = await browser.newPage();
     await page.setContent(html);

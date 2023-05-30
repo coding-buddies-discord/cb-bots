@@ -1,9 +1,10 @@
 // import { MessageEmbed } from "discord.js";
+import { GuildMember, TextChannel } from 'discord.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
 
 export default {
   name: 'guildMemberAdd',
-  execute(member) {
+  execute(member: GuildMember) {
     const welcomeGifs = [
       'https://media.giphy.com/media/keTwQbbQwlNM2RNJsW/giphy.gif',
       'https://media.giphy.com/media/IThjAlJnD9WNO/giphy.gif',
@@ -13,8 +14,9 @@ export default {
 
     const randomGif =
       welcomeGifs[Math.floor(Math.random() * welcomeGifs.length)];
-    const welcomeChannel =
-      member.guild.channels.cache.get('950578248784420874');
+    const welcomeChannel = member.guild.channels.cache.get(
+      '950578248784420874'
+    ) as TextChannel;
     const newMember = member.user.toString();
 
     const welcomeMessage = `Hey ${newMember}, welcome to Coding Buddies, we're lucky to have you here.

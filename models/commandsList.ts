@@ -1,5 +1,11 @@
 // Add new commands to this array.
-const commandsList = [
+
+type commandDescriptor = {
+  command: string;
+  description: string;
+};
+
+const commandsList: commandDescriptor[] = [
   {
     command: '!ping',
     description: 'View the bot response time in milliseconds.',

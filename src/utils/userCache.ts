@@ -1,8 +1,9 @@
-let userCache = {};
+type users = { [key: string]: string };
+let userCache: users = {};
 
-const addUserToCache = (id) => (userCache[id] = id);
+const addUserToCache = (id: string) => (userCache[id] = id);
 
-const checkUserCache = (user) => user in userCache;
+const checkUserCache = (user: string) => user in userCache;
 
 // NOTE: this method is used for testing only, it shouldn't be used anywhere else
 const clearCache = () => {
