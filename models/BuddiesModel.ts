@@ -4,6 +4,7 @@ import {
   userCache,
 } from '../src/utils/userCache.js';
 import { connectDb } from '../src/utils/mongoUtils.js';
+import { Message } from 'discord.js';
 
 // class User {
 // 	constructor(id) {
@@ -12,40 +13,43 @@ import { connectDb } from '../src/utils/mongoUtils.js';
 // 	}
 // }
 
-class PointsUser {
-  constructor() {
-    (this.pointsReceived = []),
-      (this.pointsGiven = []),
-      (this.lastPointsGivenBy = []);
-  }
+export class PointsUser {
+  constructor(
+    public _id: string,
+    public pointsReceived: PointsObject[] = [],
+    public pointsGiven = [],
+    public lastPointsGivenBy: PointGivenBy[] = []
+  ) {}
 }
 
 class PointsObject {
-  constructor(giver, date, channel) {
-    (this.givenBy = giver), (this.date = date), (this.channel = channel);
-  }
+  constructor(
+    public givenBy: string,
+    public date: number,
+    public channel: string
+  ) {}
 }
 
 class PointGivenBy {
-  constructor(userId, date) {
-    (this.userId = userId), (this.date = date);
-  }
+  constructor(public userId: string, public date: number) {}
 }
 
-const { db } = await connectDb();
+type userPoints = {
+  _id: string;
+  points: number;
+  rank: number;
+};
+
+const { db } = await connectDb<PointsUser>();
 
 export default class BuddiesModel {
-  // NOTE: this method doesn't make sense to me. It returns false or nothing inconsistently
-  static async addUserToPoints(userId) {
-    const newUser = {};
-    newUser._id = userId;
-    Object.assign(newUser, new PointsUser());
-
+  // NOTE: DONE
+  static async addUserToPoints(userId: string) {
     try {
       const inCache = checkUserCache(userId);
 
       if (inCache) {
-        return false;
+        return;
       }
 
       const foundUser = await db.findOne({ _id: userId });
@@ -54,40 +58,41 @@ export default class BuddiesModel {
         return;
       }
 
-      await db.insertOne(newUser);
+      await db.insertOne(new PointsUser(userId));
       addUserToCache(userId);
-      return true;
+      return;
     } catch (error) {
       console.log(error);
       throw new Error('Point not able to be added');
     }
   }
-
-  // eslint-disable-next-line no-shadow
-  static async testDates(userId, interaction) {
-    const currentDate = Date.now();
+  // NOTE: DONE
+  static async testDates(userId: string, authorID: string): Promise<boolean> {
     try {
+      const currentDate = Date.now();
       // finds the data from the user who's gonna receive the point
       const user = await db.findOne({ _id: userId });
       let { lastPointsGivenBy } = user;
 
+      // no points and therefore one new can be given
       if (!lastPointsGivenBy.length) return true;
 
-      const newLastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
+      // filters out dates that are more than 1min
+      lastPointsGivenBy = lastPointsGivenBy.filter(({ date }) => {
         const pointDate = new Date(date).getTime();
         const dateComparison = currentDate - pointDate;
         return dateComparison < 1000 * 60;
       });
 
-      const isValidPoint = newLastPointsGivenBy.every(
-        // eslint-disable-next-line no-shadow
-        ({ userId }) => userId !== interaction.author.id
+      // check if all points weren't gave by the current person
+      const isValidPoint = lastPointsGivenBy.every(
+        ({ userId }) => userId !== authorID
       );
-      lastPointsGivenBy = newLastPointsGivenBy;
 
+      // updates with the new list with people who gave in less than 1min
       await db.updateOne(
         { _id: userId },
-        { $set: { lastPointsGivenBy: newLastPointsGivenBy } }
+        { $set: { lastPointsGivenBy: lastPointsGivenBy } }
       );
 
       return isValidPoint;
@@ -95,8 +100,8 @@ export default class BuddiesModel {
       console.log(error);
     }
   }
-
-  static async giveUserAPoint(userId, interaction) {
+  // NOTE: DONE
+  static async giveUserAPoint(userId: string, interaction: Message) {
     const newPoint = new PointsObject(
       interaction.author.id,
       Date.now(),
@@ -105,7 +110,6 @@ export default class BuddiesModel {
     const newPointGivenBy = new PointGivenBy(interaction.author.id, Date.now());
 
     try {
-      // NOTE: we should check cache first to avoid a db hit if we can
       let user = await db.findOne({ _id: userId });
 
       if (!user) {
@@ -116,6 +120,7 @@ export default class BuddiesModel {
 
       user.pointsReceived.push(newPoint);
       user.lastPointsGivenBy.push(newPointGivenBy);
+
       await db.updateOne(
         { _id: userId },
         {
@@ -130,12 +135,13 @@ export default class BuddiesModel {
     }
   }
 
-  static async countGivenPoint(userId, messageChannel) {
+  static async countGivenPoint(userId: string, messageChannel: string) {
     try {
+      const user = await db.findOne({ _id: userId });
       const score = user.pointsReceived.filter(
         ({ channel }) => channel === messageChannel
       ).length;
-      const user = await db.findOne({ _id: userId });
+
       const scoreTotal = user.pointsReceived.length;
       return { score, scoreTotal };
     } catch (error) {
@@ -143,7 +149,7 @@ export default class BuddiesModel {
     }
   }
 
-  static async channelPoints(channelName, nameAmount = 8) {
+  static async channelPoints(channelName: string, nameAmount = 8) {
     try {
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
@@ -186,7 +192,7 @@ export default class BuddiesModel {
       // here we put the all the filters, and will return an array of objects
       // with the shape of `{_id: String, points: int, rank: int}`;
       return db
-        .aggregate([
+        .aggregate<userPoints>([
           matchRule,
           channelFilter,
           totalPointsFilter,
@@ -199,7 +205,11 @@ export default class BuddiesModel {
     }
   }
 
-  static async globalPoints(channelName, nameAmount = 8) {
+  // NOTE: consider join globalPints with channelPoints
+  static async globalPoints(
+    channelName: string,
+    nameAmount = 8
+  ): Promise<userPoints[]> {
     try {
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
@@ -230,13 +240,19 @@ export default class BuddiesModel {
       // here we put the all the filters, and will return an array of objects
       // with the shape of `{_id: String, points: int, rank: int}`;
       return await db
-        .aggregate([matchRule, totalPointsFilter, rankFilter, limitFilter])
+        .aggregate<userPoints>([
+          matchRule,
+          totalPointsFilter,
+          rankFilter,
+          limitFilter,
+        ])
         .toArray();
     } catch (error) {
       console.log(error);
     }
   }
 
+  // NOTE: done
   static async populateUserCache(cache = userCache) {
     try {
       const allUsers = await db.distinct('_id');
@@ -246,8 +262,8 @@ export default class BuddiesModel {
       console.log(error);
     }
   }
-
-  static async getUserGlobalPoints(_id) {
+  // PERF:
+  static async getUserGlobalPoints(_id: string) {
     try {
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
@@ -292,8 +308,8 @@ export default class BuddiesModel {
       console.log(error);
     }
   }
-
-  static async getUserInfoOfChannel(_id, channelId) {
+  // PERF:
+  static async getUserInfoOfChannel(_id: string, channelId: string) {
     try {
       // Bellow are all necessary filters to call the db
       // rule to grab. here all docs who has at least one `pointsReceived.channel` will be grabbed;
