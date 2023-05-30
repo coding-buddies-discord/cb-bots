@@ -1,9 +1,10 @@
+import { Client, TextChannel } from 'discord.js';
 import cron from 'node-cron';
 
 const { GENERAL_CHANNEL } = process.env;
 
-const lecronJames = async (client) => {
-  const channel = client.channels.cache.get(GENERAL_CHANNEL);
+const lecronJames = async (client: Client) => {
+  const channel = client.channels.cache.get(GENERAL_CHANNEL) as TextChannel;
 
   const endOfWeekShout = cron.schedule(
     '0 30 8 * * FRI',
