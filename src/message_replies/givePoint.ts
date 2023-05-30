@@ -1,6 +1,6 @@
 import {
   getUserIdFromMention,
-  userIDInfo,
+  MaybeUser,
 } from '../utils/getUserIdFromMention.js';
 import { isUserValid } from '../utils/isUserValid.js';
 import BuddiesModel from '../../models/BuddiesModel.js';
@@ -9,7 +9,7 @@ import { Message } from 'discord.js';
 const ARRAY_OF_POINTS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
 
 async function givePoint(commandArr: string[], message: Message) {
-  const caller: string = message.author.id;
+  const caller = message.author.id;
 
   // check if ids are valid or not and returns an array of objects
   // the objects have shape {isPossible: boolean, ID: string}
@@ -40,9 +40,10 @@ Points will be given ONLY for the first 9 people mentioned`
   const validIDs = mentionIDs.filter((mentionID) => mentionID.isPossibleID);
 
   // checks ID's against discord and keeps only those that are valid in the discord API
-  type validUserwithName = userIDInfo & { name: string };
-  let discordVerified: validUserwithName[] = [];
 
+  type discordVerified = MaybeUser & { name: string };
+
+  let discordVerified: discordVerified[] = [];
   for (const idObj of validIDs) {
     const { validUser, username: name } = await isUserValid(message, idObj.id);
     if (validUser) {
@@ -65,7 +66,7 @@ Points will be given ONLY for the first 9 people mentioned`
 
   //  check agaist the DB if the date is valid (if last points was more than 1min ago)
   for (const { id, name } of discordVerified) {
-    const canAddPoint = await BuddiesModel.testDates(id, message);
+    const canAddPoint = await BuddiesModel.testDates(id, message.author.id);
     if (!canAddPoint) {
       notGivenPoints.push(name);
       continue;
