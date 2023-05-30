@@ -1,9 +1,9 @@
-export type userIDInfo = {
-  id: string;
+export type MaybeUser = {
   isPossibleID: boolean;
+  id: string;
 };
 
-export const getUserIdFromMention = (ID: string): userIDInfo => {
+export const getUserIdFromMention = (ID: string): MaybeUser => {
   const userId = ID.match(/(?!0)+(\d)+/g);
   const id = userId?.[0];
 

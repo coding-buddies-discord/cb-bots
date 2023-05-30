@@ -12,12 +12,12 @@ const client = new MongoClient(MONGO_URI);
 
 const collection = ACTIVE_ENV === 'test' ? 'test' : COLLECTION_NAME;
 
-export const connectDb = async () => {
+export const connectDb = async function <T>() {
   try {
     await client.connect();
     const connect = client.db(DB_NAME);
     // collection name should be passed in, in the future
-    const db = connect.collection(collection);
+    const db = connect.collection<T>(collection);
     // need to export the client so that it can be closed in testing otherwise Jest will freak out
     return { db, client };
   } catch (error) {

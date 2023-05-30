@@ -32,7 +32,7 @@ const client = new Client({
 interface Event {
   name: string;
   once?: boolean;
-  execute(interaction: Interaction): void;
+  execute(interaction: any);
 }
 
 const events: Event[] = Object.values(eventsObj);
