@@ -1,18 +1,26 @@
-import { Client } from 'discord.js';
-import lecronJames from './leCronJames.js';
+import { Client } from "discord.js";
 
-export default {
-  name: 'ready',
-  once: true,
-  execute(client: Client) {
-    const { username, discriminator } = client.user;
-    console.log(`Ready as ${username}#${discriminator}!`);
+import { CBEvent } from ".";
+import { leCronJames } from "../leCronJames";
 
-    client.user.setPresence({
-      status: 'online',
-      activities: [{ name: 'The buddies bot 🤖', type: 'PLAYING' }],
-    });
+const event: CBEvent<"ready"> = {
+	name: "ready",
+	once: true,
+	execute(client: Client) {
+		if(!client.user) return;
 
-    lecronJames(client);
-  },
+		const { username, discriminator } = client.user;
+		console.log(`Ready as ${username}#${discriminator}!`);
+
+		client
+			.user
+			.setPresence({
+				status: "online",
+				activities: [{ name: "The buddies bot 🤖", type: "PLAYING" }],
+			});
+
+		leCronJames(client);
+	},
 };
+
+export default event;

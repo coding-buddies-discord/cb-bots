@@ -1,49 +1,38 @@
-// Require the necessary discord.js classes
-import { Client, Intents, Interaction } from 'discord.js';
-import * as eventsObj from './events/index.js';
-import dotenv from 'dotenv';
-import BuddiesModel from '../models/BuddiesModel.js';
+import { Client, Intents } from "discord.js";
+import dotenv from "dotenv";
 
-// eslint-disable-next-line no-unused-vars
-const userCache = (async () => await BuddiesModel.populateUserCache())();
+import { events } from "./events/index";
+import { populateUserCache } from "./user-cache";
 
 const { NODE_ENV } = process.env;
-
-if (NODE_ENV === 'development') {
-  dotenv.config({
-    path: `.env.${NODE_ENV}`,
-  });
-} else {
-  dotenv.config();
-}
-
 const token = process.env.TOKEN;
 
+const userCache = await populateUserCache();
+
+dotenv.config(
+	NODE_ENV === "development"
+		? { path: `.env.${NODE_ENV}` }
+		: {});
+
 // Create a new client instance
-const client = new Client({
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_MEMBERS,
-  ],
+export const client = new Client({
+	intents: [
+		Intents.FLAGS.GUILDS,
+		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+		Intents.FLAGS.GUILD_MEMBERS,
+	],
 });
 
-interface Event {
-  name: string;
-  once?: boolean;
-  execute(interaction: any);
-}
-
-const events: Event[] = Object.values(eventsObj);
-
-events.forEach((e) => {
-  e.once
-    ? client.once(e.name, (interaction: Interaction) => e.execute(interaction))
-    : client.on(e.name, (interaction) => e.execute(interaction));
-});
+Object
+	.values(events)
+	.forEach(({ once, name, execute }) => {
+		if(once) client.once(name, execute);
+		else client.on(name, execute);
+	});
 
 // Login to Discord with your client's token
-client.login(token);
+client
+	.login(token);
 
-export default client;
+export { };

@@ -1,8 +1,12 @@
-import { MessageReaction } from 'discord.js';
+import { MessageReaction, PartialMessageReaction, PartialUser, User } from "discord.js";
 
-export default {
-  name: 'messageReactionAdd',
-  execute(interaction: MessageReaction) {
-    console.log(`${interaction.message.author.username} reacted to a message`);
-  },
+import { CBEvent } from ".";
+
+const event: CBEvent<"messageReactionAdd"> = {
+	name: "messageReactionAdd",
+	execute(interaction: MessageReaction | PartialMessageReaction, user: User | PartialUser) {
+		console.log(`${interaction.message.author.username} reacted to a message`);
+	},
 };
+
+export default event;

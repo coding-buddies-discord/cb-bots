@@ -1,0 +1,7 @@
+- decouple the services from the database and the client
+- set up eslint rules
+- use import.meta.url or __dir to get the path of the current file
+- create singleton for the database connection
+- move the command logic into the command files
+- switch from jest to mocha + chai
+- come up with with code format config

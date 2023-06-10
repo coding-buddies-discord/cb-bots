@@ -1,0 +1,30 @@
+export const config = {
+	prefix: "!",
+	suffix: "++",
+	welcomeGIFs: [
+		"https://media.giphy.com/media/keTwQbbQwlNM2RNJsW/giphy.gif",
+		"https://media.giphy.com/media/IThjAlJnD9WNO/giphy.gif",
+		"https://media.giphy.com/media/tczJoRU7XwBS8/giphy.gif",
+		"https://media.giphy.com/media/ASd0Ukj0y3qMM/giphy.gif",
+	],
+	welcomeChannelId: "950578248784420874",
+	languagesFormats: ["!css", "!js", "!html"],
+	devUsersId: [
+		"870622678329983056",
+		"1045395050252734575",
+		"302320182066544651",
+		"986336005982416936",
+		"617759522190131210",
+		"825201636691279932",
+		"197979859773947906",
+		"804548489727442985",
+	],
+	devChannelsId: [
+		"940069955230109696",
+		"939629913537929239",
+		"941167349854248961",
+		"941873926244560896",
+		"994570011366662145",
+		"995761623883055125",
+	],
+} as const;

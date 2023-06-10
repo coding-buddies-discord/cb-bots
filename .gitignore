@@ -73,7 +73,7 @@ jspm_packages/
 # Optional REPL history
 .node_repl_history
 
-# Output of 'npm pack'
+# Output of "npm pack"
 *.tgz
 
 # Yarn Integrity file
@@ -81,7 +81,7 @@ jspm_packages/
 
 # dotenv environment variables file
 .env*
-
+!.env.example
 
 # next.js build output
 .next

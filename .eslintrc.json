@@ -1,27 +1,55 @@
 {
-  "env": {
-    "node": true,
-    "es6": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module"
-  },
-  "plugins": ["prettier"],
-  "ignorePatterns": ["**/*.test.js"],
-  "rules": {
-    "handle-callback-err": "off",
-    "max-nested-callbacks": ["error", { "max": 4 }],
-    "max-statements-per-line": ["error", { "max": 2 }],
-    "no-console": "off",
-    "no-empty-function": "error",
-    "no-inline-comments": "error",
-    "no-lonely-if": "error",
-    "no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
-    "no-var": "error",
-    "prefer-const": "error",
-    "spaced-comment": "error",
-    "yoda": "error"
-  },
-  "extends": ["eslint:recommended", "prettier"]
+	"env": {
+		"node": true,
+		"es6": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 2022,
+		"sourceType": "module"
+	},
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"ignorePatterns": [
+		"**/*.test.js"
+	],
+	"rules": {
+		"handle-callback-err": "off",
+		"max-nested-callbacks": [
+			"error",
+			{
+				"max": 4
+			}
+		],
+		"max-statements-per-line": [
+			"error",
+			{
+				"max": 2
+			}
+		],
+		"no-console": "off",
+		"no-empty-function": "error",
+		"no-inline-comments": "error",
+		"no-lonely-if": "error",
+		"no-shadow": [
+			"error",
+			{
+				"allow": [
+					"err",
+					"resolve",
+					"reject"
+				]
+			}
+		],
+		"no-var": "error",
+		"prefer-const": "error",
+		"spaced-comment": "error",
+		"yoda": "error"
+	},
+	"root": true
 }

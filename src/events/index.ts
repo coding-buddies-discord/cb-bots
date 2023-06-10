@@ -1,13 +1,21 @@
-import messageCreate from './messageCreate.js';
-import messageDelete from './messageDelete.js';
-import messageReactionAdd from './messageReactionAdd.js';
-import ready from './ready.js';
-import guildMemberAdd from './guildMemberAdd.js';
+import { ClientEvents } from "discord.js";
 
-export {
-  messageCreate,
-  messageDelete,
-  ready,
-  messageReactionAdd,
-  guildMemberAdd,
-};
+import { default as guildMemberAdd } from "./guildMemberAdd";
+import { default as messageCreate } from "./messageCreate";
+import { default as messageDelete } from "./messageDelete";
+import { default as messageReactionAdd } from "./messageReactionAdd";
+import { default as ready } from "./ready";
+
+export interface CBEvent<T extends keyof ClientEvents> {
+	name: T;
+	once?: boolean;
+	execute: (...args: ClientEvents[T]) => void;
+}
+
+export const events = [
+	guildMemberAdd,
+	messageCreate,
+	messageDelete,
+	messageReactionAdd,
+	ready,
+];
